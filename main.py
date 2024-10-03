@@ -1,4 +1,16 @@
-print("hello world - ariel")
-print("yo")
-for i in range (5):
-    print("matthew lee",+i)
+import pygame
+pygame.init()
+
+WIDTH, HEIGHT = 500, 500
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
+RED = (255, 0, 0)
+
+run = True
+while run:
+    for event in pygame.event.get():
+        if pygame.event == pygame.QUIT:
+            run = False
+
+    screen.fill(RED)
+    pygame.display.flip()
