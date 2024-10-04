@@ -9,8 +9,9 @@ RED = (255, 0, 0)
 run = True
 while run:
     for event in pygame.event.get():
-        if pygame.event == pygame.QUIT:
+        if event.type == pygame.QUIT:
             run = False
-
+    
     screen.fill(RED)
-    pygame.display.flip()
+    pygame.display.update()
+    
