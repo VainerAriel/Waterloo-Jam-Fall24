@@ -3,8 +3,9 @@ import pygame
 pygame.init()
 
 # WIDTH, HEIGHT = pygame.display.Info().current_w, pygame.display.Info().current_h
-grid_w, grid_h = 16, 9
-WIDTH, HEIGHT = 384 * 3, 216 * 3
+grid_w, grid_h = 24, 20
+SCALE = 85
+WIDTH, HEIGHT = 12 * SCALE, 10 * SCALE
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 FPS = 30
@@ -31,15 +32,15 @@ def image(surface, img, pos, mode="corner"):
 comic_sans_font = pygame.font.SysFont("comicsansms", 50)
 
 
-def text(surface, _string, f_n, color, x, y, mode):
+def text(surface, _string, f_n, color, pos, mode):
     f = f_n
     string = f.render(_string, True, color)
     string_rect = string.get_rect()
 
     if mode == "corner":
-        string_rect.topleft = (x, y)
+        string_rect.topleft = pos
     else:
-        string_rect.center = (x, y)
+        string_rect.center = pos
 
     surface.blit(string, string_rect)
 
@@ -57,5 +58,4 @@ def fade(surface, mode, draw_func, *draw_par):
         alpha += step
         pygame.time.delay(2)
         clock.tick()
-
 
