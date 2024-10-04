@@ -1,9 +1,11 @@
 import sys
 
-from settings import *
+from levels import *
 
 
 def main():
+    level = load_level(BASE_WORLD)
+    tiles, player = level
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -11,7 +13,10 @@ def main():
                 sys.exit()
 
         screen.fill((0, 0, 255))
+        for tile in tiles:
+            tile.draw()
         pygame.display.update()
+
 
 def main_menu():
     btn = pygame.Rect(500 * RESIZE, 700 * RESIZE, 300 * RESIZE, 100 * RESIZE)
@@ -33,12 +38,12 @@ def main_menu():
             screen.fill((255, 0, 0))
             pygame.draw.rect(screen, (255, 255, 255), btn)
 
-        if pygame.Rect(500*RESIZE, btn.y, btn.width, btn.height).collidepoint(mx, my):
-            btn.x = btn.x + (550*RESIZE - btn.x) * 0.1
+        if pygame.Rect(500 * RESIZE, btn.y, btn.width, btn.height).collidepoint(mx, my):
+            btn.x = btn.x + (550 * RESIZE - btn.x) * 0.1
             if click:
                 state = "game"
         else:
-            btn.x = btn.x + (500*RESIZE - btn.x) * 0.1
+            btn.x = btn.x + (500 * RESIZE - btn.x) * 0.1
 
         clock.tick(FPS)
         pygame.display.update()
