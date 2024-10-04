@@ -4,11 +4,11 @@ from settings import *
 
 
 def main():
-    run = True
-    while run:
+    while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run = False
+                pygame.quit()
+                sys.exit()
 
         screen.fill((0, 0, 255))
         pygame.display.update()
