@@ -18,8 +18,8 @@ def main():
 
         keys = pygame.key.get_pressed()
         player.update_pos(keys)
-        offset.x = player.pos.x - 960 * RESIZE
-        offset.y = player.pos.y - 540 * RESIZE
+        offset.x = player.pos.x - 800 * RESIZE
+        offset.y = player.pos.y - 1280 * RESIZE
 
         screen.fill((0, 0, 255))
         for tile in tiles:
@@ -31,7 +31,7 @@ def main():
 def main_menu():
     btn = pygame.Rect(500 * RESIZE, 700 * RESIZE, 300 * RESIZE, 100 * RESIZE)
 
-    state = "main menu"
+    state = "game"
 
     while True:
         for event in pygame.event.get():
