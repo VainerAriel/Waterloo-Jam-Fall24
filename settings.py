@@ -4,7 +4,7 @@ pygame.init()
 
 # WIDTH, HEIGHT = pygame.display.Info().current_w, pygame.display.Info().current_h
 grid_w, grid_h = 24, 20
-SCALE = 85
+SCALE = 60
 WIDTH, HEIGHT = 12 * SCALE, 10 * SCALE
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 

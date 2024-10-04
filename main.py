@@ -1,20 +1,34 @@
 import sys
 
+import pygame.key
+
 from levels import *
 
 
 def main():
     level = load_level(BASE_WORLD)
     tiles, player = level
+
+    offset = pygame.math.Vector2(0, 10 * SCALE)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_w]:
+            offset.y -= 1*RESIZE
+        if keys[pygame.K_d]:
+            offset.x += 1*RESIZE
+        if keys[pygame.K_s]:
+            offset.y += 1*RESIZE
+        if keys[pygame.K_a]:
+            offset.x -= 1*RESIZE
+
         screen.fill((0, 0, 255))
         for tile in tiles:
-            tile.draw()
+            tile.draw(offset)
         pygame.display.update()
 
 
