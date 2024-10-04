@@ -1,13 +1,4 @@
-import pygame
-pygame.init()
-
-
-WIDTH, HEIGHT = pygame.display.Info().current_w, pygame.display.Info().current_h
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-
-RESIZE = WIDTH/1920
-
-RED = (255, 0, 0)
+from settings import *
 
 run = True
 while run:
@@ -15,7 +6,7 @@ while run:
         if event.type == pygame.QUIT:
             run = False
     
-    screen.fill(RED)
+    screen.fill((255, 0, 0))
     pygame.draw.rect(screen, (255, 255, 255), (0, 0, 960*RESIZE, 540*RESIZE))
     pygame.display.update()
     
