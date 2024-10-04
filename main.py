@@ -17,18 +17,14 @@ def main():
                 sys.exit()
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_w]:
-            offset.y -= 1*RESIZE
-        if keys[pygame.K_d]:
-            offset.x += 1*RESIZE
-        if keys[pygame.K_s]:
-            offset.y += 1*RESIZE
-        if keys[pygame.K_a]:
-            offset.x -= 1*RESIZE
+        player.update_pos(keys)
+        offset.x = player.pos.x - 960 * RESIZE
+        offset.y = player.pos.y - 540 * RESIZE
 
         screen.fill((0, 0, 255))
         for tile in tiles:
             tile.draw(offset)
+        player.draw(offset)
         pygame.display.update()
 
 
