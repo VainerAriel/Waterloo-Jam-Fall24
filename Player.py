@@ -5,16 +5,17 @@ from Tile import Tile
 class Player(Tile):
     def __init__(self, display, grid_pos, color):
         super().__init__(display, grid_pos, color)
+        self.speed = 2
 
     def update_pos(self, keys):
         if keys[pygame.K_w]:
-            self.pos.y -= 1*RESIZE
+            self.pos.y -= self.speed*RESIZE
         if keys[pygame.K_d]:
-            self.pos.x += 1*RESIZE
+            self.pos.x += self.speed*RESIZE
         if keys[pygame.K_s]:
-            self.pos.y += 1*RESIZE
+            self.pos.y += self.speed*RESIZE
         if keys[pygame.K_a]:
-            self.pos.x -= 1*RESIZE
+            self.pos.x -= self.speed*RESIZE
 
 
 class Creature(Player):
