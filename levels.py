@@ -64,7 +64,7 @@ def load_level(level):
             elif tile_type == 2:
                 player = Player(screen, (x, y), (0, 255, 0))
             elif tile_type == 3:
-                tile = Tile(screen, (x,y), (0,0,255), collideable=True, movable = True)
+                tile = Tile(screen, (x, y), (0, 0, 255), collidable=True, movable=True)
             # do some ifs with different file_types, including movable tiles/blocks
             tiles.append(tile)
 
