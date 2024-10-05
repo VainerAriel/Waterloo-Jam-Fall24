@@ -6,10 +6,11 @@ class Player(Tile):
     def __init__(self, display, grid_pos, color):
         super().__init__(display, grid_pos, color)
         self.speed = 0.5
-
+        velocity = 0
     def update_pos(self, keys):
         if keys[pygame.K_w]:
-            self.pos.y -= self.speed
+            velocity = 60
+            self.pos.y -= self.velocity
         if keys[pygame.K_d]:
             self.pos.x += self.speed
         if keys[pygame.K_s]:
