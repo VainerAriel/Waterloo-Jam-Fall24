@@ -144,7 +144,7 @@ class CreatureA(Creature):
         self.can_pickup = False
    
     def check_pickup(self, tile):
-        return tile.movable and self.grab_box.colliderect(tile.hit_box):
+        return tile.movable and self.grab_box.colliderect(tile.hit_box)
     
     def pickup(self ,tiles):
         for tile in tiles:

@@ -22,7 +22,6 @@ def main():
                     summon_tile = player.check_tile_nearby(BASE_WORLD)
                     if summon_tile is not None:
                         player.summon(summon_tile)
-
         keys = pygame.key.get_pressed()
         player.update_pos(keys, tiles)
 
