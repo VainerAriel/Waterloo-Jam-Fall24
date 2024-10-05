@@ -1,9 +1,9 @@
-from settings import *
 from Tile import Tile
+from settings import *
 
 
 class Player(Tile):
-    
+
     def __init__(self, display, grid_pos, color):
         super().__init__(display, grid_pos, color, collidable=True)
         self.gravity = 2
@@ -13,13 +13,18 @@ class Player(Tile):
         self.movable = True
         self.grid_pos = pygame.math.Vector2(grid_pos[0], grid_pos[1])
         self.direction = 1
+        self.creature = None
 
+    def draw(self, offset):
+        pygame.draw.rect(self.display, self.color,
+                         (round(self.pos.x - offset.x), round(self.pos.y - offset.y), SCALE, SCALE))
+        if not self.movable:
+            self.creature.draw(offset)
     def update_pos(self, keys, tiles):
         print(self.vel.y)
         self.hit_box = pygame.Rect(self.pos.x, self.pos.y, SCALE, SCALE)
         self.vel.y += self.gravity
         print(self.movable)
-        
 
         if self.movable:
             if keys[pygame.K_w] and self.grounded:
@@ -66,12 +71,12 @@ class Player(Tile):
                     if future_rect_y.colliderect(tile.hit_box):
                         while future_rect_y.colliderect(tile.hit_box):
                             future_rect_y.y -= 1 if self.pos.y < tile.hit_box.y else -1
-                        
+
                         if self.pos.y <= tile.hit_box.y:
                             self.grounded = True
                         self.pos.y = future_rect_y.y
                         self.vel.y = 0
-                        
+
                         move[1] = False
         if move[0]:
             self.pos.x += self.vel.x
@@ -83,6 +88,7 @@ class Player(Tile):
 
     def update_grid_loc(self):
         self.grid_pos.update(round(self.pos.x / SCALE), round(self.pos.y / SCALE))
+
     def check_tile_nearby(self, level):
         self.update_grid_loc()
         print(self.grid_pos)
@@ -97,10 +103,15 @@ class Player(Tile):
         print(tiles_around)
         for i, tile_type in enumerate(tiles_around):
             if tile_type == 1 and i < (3 if self.grid_pos.y + 2 < grid_h else 2):
-                if tiles_around[i+1] in [0, 2] and tiles_around[i+2] in [0, 2]:
-                    return int(self.grid_pos.y + grid_indexes[i+1]), int(self.grid_pos.x + self.direction)
+                if tiles_around[i + 1] in [0, 2] and tiles_around[i + 2] in [0, 2]:
+                    return int(self.grid_pos.x + self.direction), int(self.grid_pos.y + grid_indexes[i + 1])
         return None
 
+    def summon(self, summon_tile):
+        self.movable = not self.movable
+        self.vel.x = 0
+        print(summon_tile)
+        self.creature = Creature(self.display, summon_tile, (255, 0, 255))
 
 
 
