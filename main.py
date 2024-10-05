@@ -9,7 +9,6 @@ def main():
     level = load_level(BASE_WORLD)
     tiles, player = level
 
-    offset = pygame.math.Vector2(0, 600)
     # game loop
     while True:
         for event in pygame.event.get():
@@ -19,30 +18,46 @@ def main():
                 # stops player movement if player presses summoning button (k)
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_k and player.grounded:
-                    summon_tile = player.check_tile_nearby(BASE_WORLD)
-                    if summon_tile is not None:
-                        player.summon(summon_tile)
+                    if not player.creature:
+                        summon_tile = player.check_tile_nearby(BASE_WORLD)
+                        if summon_tile is not None:
+                            player.summon(summon_tile)
+                    else:
+                        player.creature.vel.x = 0
+
+                    player.vel.x = 0
+                    player.controlling_player = not player.controlling_player
         keys = pygame.key.get_pressed()
-        player.update_pos(keys, tiles)
+        player.update(keys, tiles, clock.get_time())
 
         # offset for camera control
-        if player.movable:
-            new_offset = pygame.math.Vector2(player.pos.x - 800 * WIDTH / 1920, player.pos.y - 600 * WIDTH / 1920)
-        else:
-            new_offset = pygame.math.Vector2(player.creature.pos.x - 800 * WIDTH / 1920, player.creature.pos.y - 600 * WIDTH / 1920)
+        camera_offset = player.offset.copy()
+        if not player.controlling_player and player.creature:
+            camera_offset = player.creature.offset.copy()
+
+        new_offset = pygame.math.Vector2(player.pos.x - 800 * WIDTH / 1920, player.pos.y - 600 * WIDTH / 1920)
+        if not player.controlling_player and player.creature:
+            new_offset = pygame.math.Vector2(player.creature.pos.x - 800 * WIDTH / 1920,
+                                             player.creature.pos.y - 600 * WIDTH / 1920)
 
         if 0 <= new_offset.x <= SCALE * 12 and 0 <= new_offset.y <= SCALE * 10:
-            offset = new_offset
+            camera_offset = new_offset.copy()
         elif 0 <= new_offset.x <= SCALE * 12:
-            offset.x = new_offset.x
+            camera_offset.x = new_offset.x
         elif 0 <= new_offset.y <= SCALE * 10:
-            offset.y = new_offset.y
+            camera_offset.y = new_offset.y
+
         for tile in tiles:
-            tile.draw(offset)
-        player.draw(offset)
+            tile.draw(camera_offset)
+        player.draw(camera_offset)
         for i in range(grid_w):
             for j in range(grid_h):
-                pygame.draw.rect(screen, (100, 100, 100), (i * SCALE - offset.x, j * SCALE - offset.y, SCALE, SCALE), 2)
+                pygame.draw.rect(screen, (100, 100, 100), (i * SCALE - camera_offset.x, j * SCALE - camera_offset.y, SCALE, SCALE), 2)
+
+        if not player.controlling_player and player.creature:
+            player.creature.offset = camera_offset.copy()
+        else:
+            player.offset = camera_offset.copy()
 
         # maintians FPS of 30
         clock.tick(FPS)
