@@ -138,7 +138,22 @@ class CreatureA(Creature):
         super().__init__(display, grid_pos, color)
         self.can_jump = False
         self.hit_box = pygame.Rect(self.pos.x, self.pos.y, SCALE, 2 * SCALE)
+        self.grab_box = pygame.Rect(self.pos.x + (SCALE if self.direction==1 else -SCALE/2), self.pos.y+SCALE,
+                                    SCALE/2, SCALE)
         self.rect = pygame.Rect(self.pos.x, self.pos.y, SCALE, 2 * SCALE)
+        self.can_pickup = False
+   
+    def check_pickup(self, tile):
+        return tile.movable and self.grab_box.colliderect(tile.hit_box):
+    
+    def pickup(self ,tiles):
+        for tile in tiles:
+            if self.check_pickup(tile):
+                tile.pos.y -= 2*SCALE
+                self.pos.x = tile.pos.x
+        
+
+
 
 
 
