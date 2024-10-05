@@ -27,7 +27,6 @@ def main():
 
                     player.vel.x = 0
                     player.controlling_player = not player.controlling_player
-
         keys = pygame.key.get_pressed()
         player.update(keys, tiles, clock.get_time())
 

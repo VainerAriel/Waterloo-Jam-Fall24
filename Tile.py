@@ -3,13 +3,14 @@ from settings import *
 
 # class for defining tiles
 class Tile:
-    def __init__(self, display, grid_pos, color, collidable=False):
+    def __init__(self, display, grid_pos, color, collidable=False, movable=False):
         self.display = display
         self.pos = pygame.math.Vector2(grid_pos[0] * SCALE, grid_pos[1] * SCALE)
         self.color = color
         self.hit_box = pygame.Rect(self.pos.x, self.pos.y, SCALE, SCALE)
         self.rect = pygame.Rect(self.pos.x, self.pos.y, SCALE, SCALE)
         self.collidable = collidable
+        self.movable = movable
 
     # function for drawing tiles
     def draw(self, offset):

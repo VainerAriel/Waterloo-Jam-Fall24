@@ -2,7 +2,7 @@ from Player import Player
 from Tile import Tile
 from settings import *
 
-# 0 - air, 1 - wall, 2 - person
+# 0 - air, 1 - wall, 2 - person 3 - movable box
 
 RANDOM = [
     [1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1],
@@ -45,7 +45,7 @@ BASE_WORLD = [
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ]
 
@@ -63,6 +63,8 @@ def load_level(level):
                 tile = Tile(screen, (x, y), (100, 100, 100), collidable=True)
             elif tile_type == 2:
                 player = Player(screen, (x, y), (0, 255, 0))
+            elif tile_type == 3:
+                tile = Tile(screen, (x,y), (0,0,255), collideable=True, movable = True)
             # do some ifs with different file_types, including movable tiles/blocks
             tiles.append(tile)
 
