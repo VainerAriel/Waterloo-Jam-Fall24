@@ -9,7 +9,7 @@ def main():
     level = load_level(BASE_WORLD)
     tiles, player = level
 
-    offset = pygame.math.Vector2(0, 10 * SCALE)
+    offset = pygame.math.Vector2(0, 0)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -18,9 +18,16 @@ def main():
 
         keys = pygame.key.get_pressed()
         player.update_pos(keys)
-        offset.x = player.pos.x - 800 * RESIZE
-        offset.y = player.pos.y - 1280 * RESIZE
 
+        new_offset = pygame.math.Vector2(player.pos.x - 800*WIDTH/1920, player.pos.y - 1280*WIDTH/1920)
+        if 0 <= new_offset.x <= SCALE * 12 and 0 <= new_offset.y <= SCALE * 10:
+            offset = new_offset
+        elif 0 <= new_offset.x <= SCALE * 12:
+            offset.x = new_offset.x
+        elif 0 <= new_offset.y <= SCALE * 10:
+            offset.y = new_offset.y
+        print(new_offset)
+        print(offset)
         screen.fill((0, 0, 255))
         for tile in tiles:
             tile.draw(offset)
@@ -29,9 +36,9 @@ def main():
 
 
 def main_menu():
-    btn = pygame.Rect(500 * RESIZE, 700 * RESIZE, 300 * RESIZE, 100 * RESIZE)
+    btn = pygame.Rect(300, 400, 100, 50)
 
-    state = "game"
+    state = "main menu"
 
     while True:
         for event in pygame.event.get():
@@ -48,12 +55,12 @@ def main_menu():
             screen.fill((255, 0, 0))
             pygame.draw.rect(screen, (255, 255, 255), btn)
 
-        if pygame.Rect(500 * RESIZE, btn.y, btn.width, btn.height).collidepoint(mx, my):
-            btn.x = btn.x + (550 * RESIZE - btn.x) * 0.1
+        if pygame.Rect(300, btn.y, btn.width, btn.height).collidepoint(mx, my):
+            btn.x = btn.x + (350 - btn.x) * 0.1
             if click:
                 state = "game"
         else:
-            btn.x = btn.x + (500 * RESIZE - btn.x) * 0.1
+            btn.x = btn.x + (300 - btn.x) * 0.1
 
         clock.tick(FPS)
         pygame.display.update()
