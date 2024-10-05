@@ -13,6 +13,7 @@ class Tile:
         self.picked_up = False
         self.drop = False
         self.goal = -1
+        self.collide_with = None
 
     # function for drawing tiles
     def draw(self, offset):
@@ -28,8 +29,8 @@ class Tile:
     def update_movable_tile(self, tiles, player):
         if self.picked_up:
             if player.creature:
-                self.rect.x = player.creature.hit_box.x
-                self.rect.y = player.creature.hit_box.y-SCALE
+                self.rect.x = player.creature.rect.x
+                self.rect.y = player.creature.rect.y-SCALE
         if self.drop:
             if self.goal == -1:
                 print("aa")
@@ -48,18 +49,28 @@ class Tile:
                 print(self.goal)
             if self.rect.y < self.goal:
                 self.rect.y += 4
+                if self.rect.colliderect(player.hit_box):
+                    self.rect.y = player.hit_box.y-SCALE
+                if player.creature:
+                    if self.rect.colliderect(player.creature.hit_box):
+                        self.rect.y = player.creature.hit_box.y - SCALE
                 print("add")
             else:
                 self.rect.y = self.goal
 
             can_disappear = True
             if self.rect.colliderect(player.hit_box):
+                if self.collide_with is None:
+                    self.collide_with = 1
                 can_disappear = False
             if player.creature:
                 if self.rect.colliderect(player.creature.hit_box):
+                    if self.collide_with is None:
+                        self.collide_with = 2
                     can_disappear = False
 
             if can_disappear and self.rect.y == self.goal:
+                self.collide_with = None
                 self.drop = False
                 self.goal = -1
 

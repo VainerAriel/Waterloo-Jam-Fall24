@@ -7,7 +7,7 @@ from levels import *
 
 def main():
     level = load_level(BASE_WORLD)
-    tiles, player = level
+    tiles, movable_tiles, player = level
 
     # game loop
     while True:
@@ -19,7 +19,7 @@ def main():
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_k and player.grounded:
                     if not player.creature:
-                        summon_tile = player.check_tile_nearby(BASE_WORLD)
+                        summon_tile = player.check_tile_nearby(BASE_WORLD, movable_tiles)
                         if summon_tile is not None:
                             player.summon(summon_tile)
                     else:
@@ -76,7 +76,6 @@ def main():
             player.creature.offset = camera_offset.copy()
         else:
             player.offset = camera_offset.copy()
-
         # maintians FPS of 30
         clock.tick(FPS)
         # updates the screen display every frame
