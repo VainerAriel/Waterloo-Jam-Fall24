@@ -30,6 +30,8 @@ def main():
         for tile in tiles:
             tile.draw(offset)
         player.draw(offset)
+
+        clock.tick(FPS)
         pygame.display.update()
 
 

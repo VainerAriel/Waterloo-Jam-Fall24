@@ -6,7 +6,6 @@ class Tile:
         self.pos = pygame.math.Vector2(grid_pos[0] * SCALE, grid_pos[1] * SCALE)
         self.color = color
         self.hit_box = pygame.Rect(self.pos.x, self.pos.y, SCALE, SCALE)
-        print(self.hit_box)
         self.collidable = collidable
 
     def draw(self, offset):
