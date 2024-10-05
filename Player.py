@@ -9,14 +9,16 @@ class Player(Tile):
         self.gravity = 2
         self.speed = 10
         self.vel = pygame.math.Vector2(0, 0)
+        self.grounded = True
 
     def update_pos(self, keys, tiles):
         print(self.vel.y)
         self.hit_box = pygame.Rect(self.pos.x, self.pos.y, SCALE, SCALE)
         self.vel.y += self.gravity
-
-        if keys[pygame.K_w]:
-            self.vel.y = -20
+        print(self.grounded)
+        if keys[pygame.K_w] and self.grounded:
+            self.vel.y = -25
+            self.grounded = False
         if keys[pygame.K_a]:
             self.set_dir(-self.speed, self.vel.y)
         elif keys[pygame.K_d]:
@@ -56,13 +58,18 @@ class Player(Tile):
                     if future_rect_y.colliderect(tile.hit_box):
                         while future_rect_y.colliderect(tile.hit_box):
                             future_rect_y.y -= 1 if self.pos.y < tile.hit_box.y else -1
+                        
+                        if self.pos.y <= tile.hit_box.y:
+                            self.grounded = True
                         self.pos.y = future_rect_y.y
                         self.vel.y = 0
+                        
                         move[1] = False
         if move[0]:
             self.pos.x += self.vel.x
         if move[1]:
             self.pos.y += self.vel.y
+    
 
 
 

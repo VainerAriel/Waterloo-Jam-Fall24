@@ -18,9 +18,7 @@ def main():
 
         keys = pygame.key.get_pressed()
         player.update_pos(keys, tiles)
-        print(player.pos)
         new_offset = pygame.math.Vector2(player.pos.x - 800*WIDTH/1920, player.pos.y - 600*WIDTH/1920)
-        print(new_offset)
         if 0 <= new_offset.x <= SCALE * 12 and 0 <= new_offset.y <= SCALE * 10:
             offset = new_offset
         elif 0 <= new_offset.x <= SCALE * 12:
@@ -39,7 +37,7 @@ def main():
 def main_menu():
     btn = pygame.Rect(300, 400, 100, 50)
 
-    state = "main menu"
+    state = "game"
 
     while True:
         for event in pygame.event.get():
