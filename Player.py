@@ -1,9 +1,7 @@
-import pygame.math
-
 from settings import *
 from Tile import Tile
 
-
+#defines player class
 class Player(Tile):
     
     def __init__(self, display, grid_pos, color):
@@ -13,25 +11,22 @@ class Player(Tile):
         self.vel = pygame.math.Vector2(0, 0)
         self.grounded = True
         self.movable = True
-        self.grid_pos = pygame.math.Vector2(grid_pos[0], grid_pos[1])
-        self.direction = 1
 
     def update_pos(self, keys, tiles):
         print(self.vel.y)
         self.hit_box = pygame.Rect(self.pos.x, self.pos.y, SCALE, SCALE)
         self.vel.y += self.gravity
         print(self.movable)
-      
+        
+      #allows player to move for certain button preses if the player is movable
         if self.movable:
             if keys[pygame.K_w] and self.grounded:
                 self.vel.y = -25
                 self.grounded = False
             if keys[pygame.K_a]:
                 self.set_dir(-self.speed, self.vel.y)
-                self.direction = -1
             elif keys[pygame.K_d]:
                 self.set_dir(self.speed, self.vel.y)
-                self.direction = 1
             else:
                 self.set_dir(0, self.vel.y)
 
@@ -40,6 +35,7 @@ class Player(Tile):
     def set_dir(self, dir_x, dir_y):
         self.vel.update(dir_x, dir_y)
 
+#void function that checks if 2 tiles are intersecting and prevents them from intersecting
     def collide(self, tiles):
         if self.vel.magnitude() == 0:
             return
@@ -81,31 +77,6 @@ class Player(Tile):
 
         if self.vel.y != 0:
             self.grounded = False
-
-
-
-    def update_grid_loc(self):
-        self.grid_pos.update(round(self.pos.x / SCALE), round(self.pos.y / SCALE))
-
-    def check_tile_nearby(self, level):
-        self.update_grid_loc()
-        print(self.grid_pos)
-        tiles_around = []
-        grid_indexes = []
-        if self.grid_pos.y + 2 < grid_h:
-            tiles_around.append(level[int(self.grid_pos.y + 2)][int(self.grid_pos.x + self.direction)])
-            grid_indexes.append(2)
-        for i in range(1, -4, -1):
-            tiles_around.append(level[int(self.grid_pos.y + i)][int(self.grid_pos.x + self.direction)])
-            grid_indexes.append(i)
-        print(tiles_around)
-
-        for i, tile_type in enumerate(tiles_around):
-            if tile_type == 1 and i < (3 if self.grid_pos.y + 2 < grid_h else 2):
-                if tiles_around[i+1] in [0, 2] and tiles_around[i+2] in [0, 2]:
-                    return int(self.grid_pos.y + grid_indexes[i+1]), int(self.grid_pos.x + self.direction)
-
-        return None
 
 
 
