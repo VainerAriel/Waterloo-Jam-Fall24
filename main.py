@@ -27,6 +27,17 @@ def main():
 
                     player.vel.x = 0
                     player.controlling_player = not player.controlling_player
+
+                if event.key == pygame.K_SPACE:
+                    if not player.controlling_player and player.creature:
+                        if player.creature.box_picked is None:
+                            player.creature.pickup(tiles)
+                        else:
+                            player.creature.box_picked.picked_up = False
+                            player.creature.box_picked.drop = True
+                            player.creature.box_picked = None
+
+
         keys = pygame.key.get_pressed()
         player.update(keys, tiles, clock.get_time())
 
@@ -35,10 +46,10 @@ def main():
         if not player.controlling_player and player.creature:
             camera_offset = player.creature.offset.copy()
 
-        new_offset = pygame.math.Vector2(player.pos.x - 800 * WIDTH / 1920, player.pos.y - 600 * WIDTH / 1920)
+        new_offset = pygame.math.Vector2(player.rect.x - 800 * WIDTH / 1920, player.rect.y - 600 * WIDTH / 1920)
         if not player.controlling_player and player.creature:
-            new_offset = pygame.math.Vector2(player.creature.pos.x - 800 * WIDTH / 1920,
-                                             player.creature.pos.y - 600 * WIDTH / 1920)
+            new_offset = pygame.math.Vector2(player.creature.rect.x - 800 * WIDTH / 1920,
+                                             player.creature.rect.y - 600 * WIDTH / 1920)
 
         if 0 <= new_offset.x <= SCALE * 12 and 0 <= new_offset.y <= SCALE * 10:
             camera_offset = new_offset.copy()
@@ -48,7 +59,14 @@ def main():
             camera_offset.y = new_offset.y
 
         for tile in tiles:
-            tile.draw(camera_offset)
+            if not tile.movable:
+                tile.draw(camera_offset)
+
+        for tile in tiles:
+            if tile.movable:
+                tile.update_movable_tile(tiles, player)
+                tile.draw(camera_offset)
+
         player.draw(camera_offset)
         for i in range(grid_w):
             for j in range(grid_h):

@@ -19,31 +19,32 @@ class Player(Tile):
 
     def draw(self, offset):
         pygame.draw.rect(self.display, self.color,
-                         (round(self.pos.x - offset.x), round(self.pos.y - offset.y), SCALE, SCALE))
+                         (round(self.rect.x - offset.x), round(self.rect.y - offset.y), SCALE, SCALE))
         if self.creature:
             pygame.draw.rect(self.display, self.creature.color,
-                             (round(self.creature.pos.x - offset.x), round(self.creature.pos.y - offset.y),
+                             (round(self.creature.rect.x - offset.x), round(self.creature.rect.y - offset.y),
                               self.creature.rect.width, self.creature.rect.height))
 
     def update(self, keys, tiles, time_passed=0):
         self.update_pos(keys, tiles)
-        print(self.controlling_player)
         if self.creature:
             self.creature.update_timer(time_passed)
             if self.creature.destroy_creature:
                 self.controlling_player = True
                 self.creature = None
+                for tile in tiles:
+                    if tile.picked_up:
+                        tile.picked_up = False
+                        tile.drop = True
 
     def update_pos(self, keys, tiles):
-        moving_person = self if self.controlling_player else self.creature
-
-        self.hit_box.x = self.pos.x
-        self.hit_box.y = self.pos.y
+        self.hit_box.x = self.rect.x
+        self.hit_box.y = self.rect.y
         self.vel.y += self.gravity
 
         if self.creature:
-            self.creature.hit_box.x = self.creature.pos.x
-            self.creature.hit_box.y = self.creature.pos.y
+            self.creature.hit_box.x = self.creature.rect.x
+            self.creature.hit_box.y = self.creature.rect.y
             self.creature.vel.y += self.creature.gravity
 
         self.controls(self.creature if not self.controlling_player and self.creature else self, keys)
@@ -79,47 +80,47 @@ class Player(Tile):
 
         move = [True, True]
         for tile in tiles:
-            if future_rect.colliderect(tile.hit_box):
-                if tile.collidable:
-                    future_rect_x = pygame.Rect(self.hit_box.x + self.vel.x,
-                                                self.hit_box.y,
-                                                self.hit_box.width,
-                                                self.hit_box.height)
-                    future_rect_y = pygame.Rect(self.hit_box.x,
-                                                self.hit_box.y + self.vel.y,
-                                                self.hit_box.width,
-                                                self.hit_box.height)
+            if not tile.drop:
+                if future_rect.colliderect(tile.rect):
+                    if tile.collidable:
+                        future_rect_x = pygame.Rect(self.hit_box.x + self.vel.x,
+                                                    self.hit_box.y,
+                                                    self.hit_box.width,
+                                                    self.hit_box.height)
+                        future_rect_y = pygame.Rect(self.hit_box.x,
+                                                    self.hit_box.y + self.vel.y,
+                                                    self.hit_box.width,
+                                                    self.hit_box.height)
 
-                    if future_rect_x.colliderect(tile.hit_box):
-                        while future_rect_x.colliderect(tile.hit_box):
-                            future_rect_x.x -= 1 if self.pos.x < tile.hit_box.x else -1
-                        self.pos.x = future_rect_x.x
-                        move[0] = False
+                        if future_rect_x.colliderect(tile.rect):
+                            while future_rect_x.colliderect(tile.rect):
+                                future_rect_x.x -= 1 if self.rect.x < tile.rect.x else -1
+                            self.rect.x = future_rect_x.x
+                            move[0] = False
 
-                    if future_rect_y.colliderect(tile.hit_box):
-                        while future_rect_y.colliderect(tile.hit_box):
-                            future_rect_y.y -= 1 if self.pos.y < tile.hit_box.y else -1
+                        if future_rect_y.colliderect(tile.rect):
+                            while future_rect_y.colliderect(tile.rect):
+                                future_rect_y.y -= 1 if self.rect.y < tile.rect.y else -1
 
-                        if self.pos.y <= tile.hit_box.y:
-                            self.grounded = True
-                        self.pos.y = future_rect_y.y
-                        self.vel.y = 0
+                            if self.rect.y <= tile.rect.y:
+                                self.grounded = True
+                            self.rect.y = future_rect_y.y
+                            self.vel.y = 0
 
-                        move[1] = False
+                            move[1] = False
         if move[0]:
-            self.pos.x += self.vel.x
+            self.rect.x += self.vel.x
         if move[1]:
-            self.pos.y += self.vel.y
+            self.rect.y += self.vel.y
 
         if self.vel.y != 0:
             self.grounded = False
 
     def update_grid_loc(self):
-        self.grid_pos.update(round(self.pos.x / SCALE), round(self.pos.y / SCALE))
+        self.grid_pos.update(round(self.rect.x / SCALE), round(self.rect.y / SCALE))
 
     def check_tile_nearby(self, level):
         self.update_grid_loc()
-        print(self.grid_pos)
         tiles_around = []
         grid_indexes = []
         if self.grid_pos.y + 2 < grid_h:
@@ -128,9 +129,8 @@ class Player(Tile):
         for i in range(1, -4, -1):
             tiles_around.append(level[int(self.grid_pos.y + i)][int(self.grid_pos.x + self.direction)])
             grid_indexes.append(i)
-        print(tiles_around)
         for i, tile_type in enumerate(tiles_around):
-            if tile_type == 1 and i < (3 if self.grid_pos.y + 2 < grid_h else 2):
+            if tile_type in [1, 3] and i < (3 if self.grid_pos.y + 2 < grid_h else 2):
                 if tiles_around[i + 1] in [0, 2] and tiles_around[i + 2] in [0, 2]:
                     return int(self.grid_pos.x + self.direction), int(self.grid_pos.y + grid_indexes[i + 1])
         return None
@@ -145,12 +145,11 @@ class Creature(Player):
         super().__init__(display, grid_pos, color)
 
         self.disappear_timer = 0
-        self.destroy_creature_timer = 5000
+        self.destroy_creature_timer = 2000
         self.destroy_creature = False
 
     def update_timer(self, time_passed=0):
         self.destroy_creature_timer -= time_passed
-        print(time_passed)
 
         if self.destroy_creature_timer < 0:
             self.destroy_creature = True
@@ -160,20 +159,27 @@ class CreatureA(Creature):
     def __init__(self, display, grid_pos, color):
         super().__init__(display, grid_pos, color)
         self.can_jump = False
-        self.hit_box = pygame.Rect(self.pos.x, self.pos.y, SCALE, 2 * SCALE)
-        self.grab_box = pygame.Rect(self.pos.x + (SCALE if self.direction==1 else -SCALE/2), self.pos.y+SCALE,
+        self.hit_box = pygame.Rect(self.rect.x, self.rect.y, SCALE, 2 * SCALE)
+        self.grab_box = pygame.Rect(self.rect.x + (SCALE if self.direction==1 else -SCALE/2), self.rect.y+SCALE,
                                     SCALE/2, SCALE)
-        self.rect = pygame.Rect(self.pos.x, self.pos.y, SCALE, 2 * SCALE)
+        self.rect = pygame.Rect(self.rect.x, self.rect.y, SCALE, 2 * SCALE)
         self.can_pickup = False
+
+        self.box_picked = None
    
     def check_pickup(self, tile):
-        return tile.movable and self.grab_box.colliderect(tile.hit_box)
+        return tile.movable and self.grab_box.colliderect(tile.rect) and not tile.drop
     
-    def pickup(self ,tiles):
+    def pickup(self, tiles):
+        self.grab_box = pygame.Rect(self.rect.x + (SCALE if self.direction == 1 else -SCALE / 2), self.rect.y + SCALE,
+                                    SCALE / 2, SCALE)
         for tile in tiles:
             if self.check_pickup(tile):
-                tile.pos.y -= 2*SCALE
-                self.pos.x = tile.pos.x
+                print("yay")
+                self.box_picked = tile
+                self.box_picked.rect.y -= 2*SCALE
+                self.rect.x = self.box_picked.rect.x
+                self.box_picked.picked_up = True
         
 
 
