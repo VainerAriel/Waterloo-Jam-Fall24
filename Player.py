@@ -69,7 +69,9 @@ class Player(Tile):
             self.pos.x += self.vel.x
         if move[1]:
             self.pos.y += self.vel.y
-    
+
+        if self.vel.y != 0:
+            self.grounded = False
 
 
 
