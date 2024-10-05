@@ -9,4 +9,4 @@ class Tile:
         self.collidable = collidable
 
     def draw(self, offset):
-        pygame.draw.rect(self.display, self.color, (self.pos.x-offset.x, self.pos.y-offset.y, SCALE, SCALE))
+        pygame.draw.rect(self.display, self.color, (round(self.pos.x-offset.x), round(self.pos.y-offset.y), SCALE, SCALE))
