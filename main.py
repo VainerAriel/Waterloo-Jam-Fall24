@@ -17,17 +17,15 @@ def main():
                 sys.exit()
 
         keys = pygame.key.get_pressed()
-        player.update_pos(keys)
-
+        player.update_pos(keys, tiles)
+        print(player.pos)
         new_offset = pygame.math.Vector2(player.pos.x - 800*WIDTH/1920, player.pos.y - 1280*WIDTH/1920)
-        if 0 <= new_offset.x <= SCALE * 12 and 0 <= new_offset.y <= SCALE * 10:
+        if 0 <= new_offset.x <= SCALE * 12 and 0 <= new_offset.y <= SCALE * 10 or True:
             offset = new_offset
         elif 0 <= new_offset.x <= SCALE * 12:
             offset.x = new_offset.x
         elif 0 <= new_offset.y <= SCALE * 10:
             offset.y = new_offset.y
-        print(new_offset)
-        print(offset)
         screen.fill((0, 0, 255))
         for tile in tiles:
             tile.draw(offset)
