@@ -9,7 +9,7 @@ def main():
     level = load_level(BASE_WORLD)
     tiles, player = level
 
-    offset = pygame.math.Vector2(0, 0)
+    offset = pygame.math.Vector2(0, 600)
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -19,8 +19,9 @@ def main():
         keys = pygame.key.get_pressed()
         player.update_pos(keys, tiles)
         print(player.pos)
-        new_offset = pygame.math.Vector2(player.pos.x - 800*WIDTH/1920, player.pos.y - 1280*WIDTH/1920)
-        if 0 <= new_offset.x <= SCALE * 12 and 0 <= new_offset.y <= SCALE * 10 or True:
+        new_offset = pygame.math.Vector2(player.pos.x - 800*WIDTH/1920, player.pos.y - 600*WIDTH/1920)
+        print(new_offset)
+        if 0 <= new_offset.x <= SCALE * 12 and 0 <= new_offset.y <= SCALE * 10:
             offset = new_offset
         elif 0 <= new_offset.x <= SCALE * 12:
             offset.x = new_offset.x

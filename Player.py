@@ -6,7 +6,7 @@ class Player(Tile):
     
     def __init__(self, display, grid_pos, color):
         super().__init__(display, grid_pos, color, collidable=True)
-        self.gravity = 1
+        self.gravity = 2
         self.speed = 10
         self.vel = pygame.math.Vector2(0, 0)
 
