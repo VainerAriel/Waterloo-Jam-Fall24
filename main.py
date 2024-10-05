@@ -15,10 +15,15 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_k and player.grounded:
+                    player.movable = not player.movable
+                    player.vel.x = 0
         keys = pygame.key.get_pressed()
         player.update_pos(keys, tiles)
+
         new_offset = pygame.math.Vector2(player.pos.x - 800*WIDTH/1920, player.pos.y - 600*WIDTH/1920)
+
         if 0 <= new_offset.x <= SCALE * 12 and 0 <= new_offset.y <= SCALE * 10:
             offset = new_offset
         elif 0 <= new_offset.x <= SCALE * 12:
