@@ -6,16 +6,17 @@ class Player(Tile):
     
     def __init__(self, display, grid_pos, color):
         super().__init__(display, grid_pos, color, collidable=True)
-        self.velocity = 0
         self.gravity = 1
-        self.speed = 0.5
+        self.speed = 10
         self.vel = pygame.math.Vector2(0, 0)
 
     def update_pos(self, keys, tiles):
+        print(self.vel.y)
         self.hit_box = pygame.Rect(self.pos.x, self.pos.y, SCALE, SCALE)
+        self.vel.y += self.gravity
 
         if keys[pygame.K_w]:
-            self.velocity = -20
+            self.vel.y = -20
         if keys[pygame.K_a]:
             self.set_dir(-self.speed, self.vel.y)
         elif keys[pygame.K_d]:
@@ -32,7 +33,7 @@ class Player(Tile):
         if self.vel.magnitude() == 0:
             return
         future_rect = pygame.Rect(self.pos.x + self.vel.x,
-                                  self.pos.y + self.velocity,
+                                  self.pos.y + self.vel.y,
                                   SCALE, SCALE)
 
         move = [True, True]
@@ -43,7 +44,7 @@ class Player(Tile):
                                                 self.pos.y,
                                                 SCALE, SCALE)
                     future_rect_y = pygame.Rect(self.pos.x,
-                                                self.pos.y + self.velocity,
+                                                self.pos.y + self.vel.y,
                                                 SCALE, SCALE)
 
                     if future_rect_x.colliderect(tile.hit_box):
@@ -56,13 +57,14 @@ class Player(Tile):
                         while future_rect_y.colliderect(tile.hit_box):
                             future_rect_y.y -= 1 if self.pos.y < tile.hit_box.y else -1
                         self.pos.y = future_rect_y.y
+                        self.vel.y = 0
                         move[1] = False
         if move[0]:
             self.pos.x += self.vel.x
         if move[1]:
-#             self.pos.y += self.vel.y
-            self.velocity += self.gravity
-            self.pos.y += self.velocity
+            self.pos.y += self.vel.y
+
+
 
 
 class Creature(Player):
