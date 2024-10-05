@@ -27,7 +27,10 @@ def main():
         player.update_pos(keys, tiles)
 
         # offset for camera control
-        new_offset = pygame.math.Vector2(player.pos.x - 800 * WIDTH / 1920, player.pos.y - 600 * WIDTH / 1920)
+        if player.movable:
+            new_offset = pygame.math.Vector2(player.pos.x - 800 * WIDTH / 1920, player.pos.y - 600 * WIDTH / 1920)
+        else:
+            new_offset = pygame.math.Vector2(player.creature.pos.x - 800 * WIDTH / 1920, player.creature.pos.y - 600 * WIDTH / 1920)
 
         if 0 <= new_offset.x <= SCALE * 12 and 0 <= new_offset.y <= SCALE * 10:
             offset = new_offset

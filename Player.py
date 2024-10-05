@@ -14,32 +14,43 @@ class Player(Tile):
         self.grid_pos = pygame.math.Vector2(grid_pos[0], grid_pos[1])
         self.direction = 1
         self.creature = None
+        self.can_jump = True
 
     def draw(self, offset):
         pygame.draw.rect(self.display, self.color,
                          (round(self.pos.x - offset.x), round(self.pos.y - offset.y), SCALE, SCALE))
         if not self.movable:
-            self.creature.draw(offset)
-    def update_pos(self, keys, tiles):
-        print(self.vel.y)
-        self.hit_box = pygame.Rect(self.pos.x, self.pos.y, SCALE, SCALE)
-        self.vel.y += self.gravity
-        print(self.movable)
+            pygame.draw.rect(self.display, self.creature.color,
+                             (round(self.creature.pos.x - offset.x), round(self.creature.pos.y - offset.y),
+                              self.creature.rect.width, self.creature.rect.height))
 
-        if self.movable:
-            if keys[pygame.K_w] and self.grounded:
-                self.vel.y = -25
-                self.grounded = False
-            if keys[pygame.K_a]:
-                self.set_dir(-self.speed, self.vel.y)
-                self.direction = -1
-            elif keys[pygame.K_d]:
-                self.set_dir(self.speed, self.vel.y)
-                self.direction = 1
-            else:
-                self.set_dir(0, self.vel.y)
+    def update_pos(self, keys, tiles):
+        moving_person = self if self.movable else self.creature
+
+        self.hit_box.x = self.pos.x
+        self.hit_box.y = self.pos.y
+        self.vel.y += self.gravity
+
+        if not self.movable:
+            self.creature.hit_box.x = self.creature.pos.x
+            self.creature.hit_box.y = self.creature.pos.y
+            self.creature.vel.y += self.creature.gravity
+
+        if keys[pygame.K_w] and moving_person.grounded and moving_person.can_jump:
+            moving_person.vel.y = -25
+            moving_person.grounded = False
+        if keys[pygame.K_a]:
+            moving_person.set_dir(-moving_person.speed, moving_person.vel.y)
+            moving_person.direction = -1
+        elif keys[pygame.K_d]:
+            moving_person.set_dir(moving_person.speed, moving_person.vel.y)
+            moving_person.direction = 1
+        else:
+            moving_person.set_dir(0, moving_person.vel.y)
 
         self.collide(tiles)
+        if not self.movable:
+            self.creature.collide(tiles)
 
     def set_dir(self, dir_x, dir_y):
         self.vel.update(dir_x, dir_y)
@@ -47,20 +58,23 @@ class Player(Tile):
     def collide(self, tiles):
         if self.vel.magnitude() == 0:
             return
-        future_rect = pygame.Rect(self.pos.x + self.vel.x,
-                                  self.pos.y + self.vel.y,
-                                  SCALE, SCALE)
+        future_rect = pygame.Rect(self.hit_box.x + self.vel.x,
+                                  self.hit_box.y + self.vel.y,
+                                  self.hit_box.width,
+                                  self.hit_box.height)
 
         move = [True, True]
         for tile in tiles:
             if future_rect.colliderect(tile.hit_box):
                 if tile.collidable:
-                    future_rect_x = pygame.Rect(self.pos.x + self.vel.x,
-                                                self.pos.y,
-                                                SCALE, SCALE)
-                    future_rect_y = pygame.Rect(self.pos.x,
-                                                self.pos.y + self.vel.y,
-                                                SCALE, SCALE)
+                    future_rect_x = pygame.Rect(self.hit_box.x + self.vel.x,
+                                                self.hit_box.y,
+                                                self.hit_box.width,
+                                                self.hit_box.height)
+                    future_rect_y = pygame.Rect(self.hit_box.x,
+                                                self.hit_box.y + self.vel.y,
+                                                self.hit_box.width,
+                                                self.hit_box.height)
 
                     if future_rect_x.colliderect(tile.hit_box):
                         while future_rect_x.colliderect(tile.hit_box):
@@ -111,8 +125,7 @@ class Player(Tile):
         self.movable = not self.movable
         self.vel.x = 0
         print(summon_tile)
-        self.creature = Creature(self.display, summon_tile, (255, 0, 255))
-
+        self.creature = CreatureA(self.display, (summon_tile[0], summon_tile[1] - 1), (255, 0, 255))
 
 
 class Creature(Player):
@@ -123,6 +136,10 @@ class Creature(Player):
 class CreatureA(Creature):
     def __init__(self, display, grid_pos, color):
         super().__init__(display, grid_pos, color)
+        self.can_jump = False
+        self.hit_box = pygame.Rect(self.pos.x, self.pos.y, SCALE, 2 * SCALE)
+        self.rect = pygame.Rect(self.pos.x, self.pos.y, SCALE, 2 * SCALE)
+
 
 
 class CreatureB(Creature):
