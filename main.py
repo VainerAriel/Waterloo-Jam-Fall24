@@ -17,8 +17,10 @@ def main():
                 sys.exit()
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_k and player.grounded:
-                    player.movable = not player.movable
-                    player.vel.x = 0
+                    summon_tile = player.check_tile_nearby(BASE_WORLD)
+                    if summon_tile is not None:
+                        player.movable = not player.movable
+                        player.vel.x = 0
         keys = pygame.key.get_pressed()
         player.update_pos(keys, tiles)
 
@@ -30,10 +32,12 @@ def main():
             offset.x = new_offset.x
         elif 0 <= new_offset.y <= SCALE * 10:
             offset.y = new_offset.y
-        screen.fill((0, 0, 255))
         for tile in tiles:
             tile.draw(offset)
         player.draw(offset)
+        for i in range(grid_w):
+            for j in range(grid_h):
+                pygame.draw.rect(screen, (100, 100, 100), (i*SCALE-offset.x, j*SCALE-offset.y, SCALE, SCALE), 2)
 
         clock.tick(FPS)
         pygame.display.update()
