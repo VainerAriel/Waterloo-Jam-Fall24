@@ -8,9 +8,10 @@ class Tile:
         self.pos = pygame.math.Vector2(grid_pos[0] * SCALE, grid_pos[1] * SCALE)
         self.color = color
         self.hit_box = pygame.Rect(self.pos.x, self.pos.y, SCALE, SCALE)
+        self.rect = pygame.Rect(self.pos.x, self.pos.y, SCALE, SCALE)
         self.collidable = collidable
 
     # function for drawing tiles
     def draw(self, offset):
         pygame.draw.rect(self.display, self.color,
-                         (round(self.pos.x - offset.x), round(self.pos.y - offset.y), SCALE, SCALE))
+                         (round(self.pos.x - offset.x), round(self.pos.y - offset.y), self.rect.width, self.rect.height))
