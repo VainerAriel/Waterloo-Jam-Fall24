@@ -6,7 +6,7 @@ class Player(Tile):
 
     def __init__(self, display, grid_pos, color):
         super().__init__(display, grid_pos, color, collidable=True)
-        self.gravity = 2
+        self.gravity = 3
         self.speed = 10
         self.vel = pygame.math.Vector2(0, 0)
         self.grounded = True
@@ -55,7 +55,7 @@ class Player(Tile):
 
     def controls(self, moving_person, keys):
         if keys[pygame.K_w] and moving_person.grounded and moving_person.can_jump:
-            moving_person.vel.y = -25
+            moving_person.vel.y = -26
             moving_person.grounded = False
         if keys[pygame.K_a]:
             moving_person.set_dir(-moving_person.speed, moving_person.vel.y)
@@ -145,7 +145,7 @@ class Creature(Player):
         super().__init__(display, grid_pos, color)
 
         self.disappear_timer = 0
-        self.destroy_creature_timer = 2000
+        self.destroy_creature_timer = 10000
         self.destroy_creature = False
 
     def update_timer(self, time_passed=0):
@@ -178,7 +178,7 @@ class CreatureA(Creature):
                 print("yay")
                 self.box_picked = tile
                 self.box_picked.rect.y -= 2*SCALE
-                self.rect.x = self.box_picked.rect.x
+                self.box_picked.rect.x = self.rect.x
                 self.box_picked.picked_up = True
         
 
