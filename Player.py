@@ -1,7 +1,7 @@
 from settings import *
 from Tile import Tile
 
-
+#defines player class
 class Player(Tile):
     
     def __init__(self, display, grid_pos, color):
@@ -18,7 +18,7 @@ class Player(Tile):
         self.vel.y += self.gravity
         print(self.movable)
         
-      
+      #allows player to move for certain button preses if the player is movable
         if self.movable:
             if keys[pygame.K_w] and self.grounded:
                 self.vel.y = -25
@@ -35,6 +35,7 @@ class Player(Tile):
     def set_dir(self, dir_x, dir_y):
         self.vel.update(dir_x, dir_y)
 
+#void function that checks if 2 tiles are intersecting and prevents them from intersecting
     def collide(self, tiles):
         if self.vel.magnitude() == 0:
             return

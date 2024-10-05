@@ -1,25 +1,26 @@
 import pygame
 
 pygame.init()
-
-# WIDTH, HEIGHT = pygame.display.Info().current_w, pygame.display.Info().current_h
+# size of screen in terms of tiles
 grid_w, grid_h = 24, 20
-SCALE = 60
+
+SCALE = 60 # size of tiles in pixels
 WIDTH, HEIGHT = 12 * SCALE, 10 * SCALE
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-FPS = 30
+FPS = 30 # sets framrate constant
 
+#sets name of window
 pygame.display.set_caption("Waterloo Jam!!")
 clock = pygame.time.Clock()
 
-
+#function for loading in images
 def loadify(filename, scaling):
     img = pygame.image.load(filename).convert_alpha()
     img = pygame.transform.scale(img, (img.get_width() * scaling, img.get_height() * scaling))
     return img
 
-
+#function for displaying images
 def image(surface, img, pos, mode="corner"):
     if mode == "center":
         surface.blit(img, (pos[0] - img.get_width() / 2, pos[1] - img.get_height() / 2))
@@ -29,7 +30,7 @@ def image(surface, img, pos, mode="corner"):
 
 comic_sans_font = pygame.font.SysFont("comicsansms", 50)
 
-
+#function for displaying text
 def text(surface, _string, f_n, color, pos, mode):
     f = f_n
     string = f.render(_string, True, color)
@@ -42,7 +43,7 @@ def text(surface, _string, f_n, color, pos, mode):
 
     surface.blit(string, string_rect)
 
-
+#function for fading levels to mask loading
 def fade(surface, mode, draw_func, *draw_par):
     fade_surf = pygame.Surface((WIDTH, HEIGHT))
     fade_surf.fill((0, 0, 0))
