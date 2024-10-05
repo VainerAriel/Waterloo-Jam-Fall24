@@ -10,8 +10,6 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 FPS = 30
 
-RESIZE = WIDTH / 1920
-
 pygame.display.set_caption("Waterloo Jam!!")
 clock = pygame.time.Clock()
 
