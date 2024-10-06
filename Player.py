@@ -42,7 +42,7 @@ class Player(Tile):
         # else:
         #     self.walk_a.draw(self.display, (round(self.rect.x - offset.x), round(self.rect.y - offset.y)),
         #                      self.direction)
-        pygame.draw.rect(self.display, (255, 0, 0), (round(self.hit_box.x-offset.x), round(self.hit_box.y-offset.y), self.hit_box.width, self.hit_box.height))
+        # pygame.draw.rect(self.display, (255, 0, 0), (round(self.hit_box.x-offset.x), round(self.hit_box.y-offset.y), self.hit_box.width, self.hit_box.height))
 
         # if self.current_frame >= 31: self.current_frame = 0
         # if self.images is not None:
@@ -279,7 +279,7 @@ class Player(Tile):
                         self.vel.y = 0
 
                         move[1] = False
-                    if future_rect_x.colliderect(tile.rect) and not(2650<self.rect.x<3300 and 1700<self.rect.y<2000):
+                    if future_rect_x.colliderect(tile.rect) and not(2650<self.rect.x<3000 and 1700<self.rect.y<2000):
                         while future_rect_x.colliderect(tile.rect):
                             future_rect_x.x -= 1 if self.rect.x - self.hit_box.width / 2 < tile.rect.x else -1
                         self.rect.x = future_rect_x.x + future_rect_x.width / 2
@@ -343,7 +343,7 @@ class Creature(Player):
         super().__init__(display, grid_pos, color, images=None)
         self.speed = 8
         self.disappear_timer = 0
-        self.destroy_creature_timer = 15000
+        self.destroy_creature_timer = 30000
         self.destroy_creature = False
         self.carrying_block = False
 
@@ -390,18 +390,24 @@ class CreatureA(Creature):
 
                 loc = round(self.stack[-1].rect.y / SCALE), round(self.stack[-1].rect.x / SCALE)
                 if not (level[loc[0] - 1][loc[1]] in [0, 2] and level[loc[0] - 2][loc[1]] in [0, 2]):
+                    for s in self.stack:
+                        s.show_tile = True
                     self.stack = []
 
                 fakerect = pygame.Rect(player.rect.x - player.hit_box.width / 2,
                                        player.rect.y - player.hit_box.height / 2 + 4, player.hit_box.width,
                                        player.hit_box.height)
-                if fakerect.colliderect(self.stack[-1].rect) and (
-                        level[round((player.rect.y - player.hit_box.height / 2) / SCALE) - 2][
-                            round((player.rect.x - player.hit_box.width / 2) / SCALE)] in [0, 2]):
-                    player.rect.y -= SCALE * 2
-                elif not (level[round((player.rect.y - player.hit_box.height / 2) / SCALE) - 2][
-                              round((player.rect.x - player.hit_box.width / 2) / SCALE)] in [0, 2]):
-                    self.stack = []
+
+                if len(self.stack) > 0:
+                    print("addda")
+                    if fakerect.colliderect(self.stack[-1].rect) and (
+                            level[round((player.rect.y - player.hit_box.height / 2) / SCALE) - 2][
+                                round((player.rect.x - player.hit_box.width / 2) / SCALE)] in [0, 2]):
+                        player.rect.y -= SCALE * 2
+                    elif not (level[round((player.rect.y - player.hit_box.height / 2) / SCALE) - 2][
+                                  round((player.rect.x - player.hit_box.width / 2) / SCALE)] in [0, 2]):
+                        # self.stack = []
+                        pass
                 # if not level[location[1] - i - 1][location[0]] in [0, 2]:
                 #     self.stack = []
                 #     break

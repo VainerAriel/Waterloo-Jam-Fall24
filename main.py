@@ -37,7 +37,9 @@ def main():
                         print(len(player.creature.stack))
                         if len(player.creature.stack) == 0:
                             player.creature.pickup(tiles, movable_tiles, BASE_WORLD, player)
-                            player.creature.carrying_block = True
+                            if len(player.creature.stack) > 0:
+                                player.creature.carrying_block = True
+
                         else:
                             for box in player.creature.stack:
                                 box.picked_up = False
@@ -54,7 +56,7 @@ def main():
         if not player.controlling_player and player.creature:
             camera_offset = player.creature.offset.copy()
 
-        new_offset = pygame.math.Vector2(player.rect.x - WIDTH/2, player.rect.y-HEIGHT/2)
+        new_offset = pygame.math.Vector2(player.rect.x - WIDTH/2, player.rect.y-HEIGHT/2-SCALE*2)
         if not player.controlling_player and player.creature:
             new_offset = pygame.math.Vector2(player.creature.rect.x - WIDTH/2,
                                              player.creature.rect.y - HEIGHT/2)

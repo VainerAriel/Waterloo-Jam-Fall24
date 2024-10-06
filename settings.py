@@ -7,7 +7,7 @@ DEFAULT_IMAGE_SIZE = (60, 60)
 SCALE = 100  # size of tiles in pixels
 DEFAULT_IMG_SIZE = (SCALE, SCALE)
 DEFAULT_MONKEY_SIZE = (120, 120)
-WIDTH, HEIGHT = 8 * SCALE, 6 * SCALE
+WIDTH, HEIGHT = 8 * SCALE, 8 * SCALE
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 FPS = 32  # sets framrate constant
