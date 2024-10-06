@@ -125,6 +125,7 @@ class Player(Tile):
                                 (round(self.creature.rect.x - offset.x), 
                                 round(self.creature.rect.y - offset.y)))
                             if self.creature.current_frame %8 == 0:self.creature.anim_frame+=1
+                    
                  else:
                         if self.creature.vel.x == 0:
                             self.creature.images = big_idle_anim[1]
@@ -140,9 +141,10 @@ class Player(Tile):
                                 (round(self.creature.rect.x - offset.x), 
                                 round(self.creature.rect.y - offset.y)))
                             if self.creature.current_frame %8 == 0:self.creature.anim_frame+=1
-            elif self.creature.carrying_block:
-                 
                  self.creature.current_frame+=1
+            elif not self.creature == None and self.creature.carrying_block:
+                             self.creature.current_frame+=1
+
                  
         # if False:
         #     print("Bbbbbbbbbbbbbbbbbbbbbbbbbb")
