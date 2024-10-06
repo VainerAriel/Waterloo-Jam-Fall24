@@ -24,10 +24,12 @@ class Player(Tile):
         if self.images is not None:
             if self.direction == 1:
                 if self.summoning:   
+                    
                     self.images = summon_anim[0]    
                     if self.anim_frame>=len(self.images): 
                         self.anim_frame = 0
                         self.summoning = False
+                        self.controlling_player = not self.controlling_player
                     image(self.display, self.images[self.anim_frame],
                             (round(self.rect.x - self.offset.x),
                                 round(self.rect.y - self.offset.y)))
@@ -44,17 +46,19 @@ class Player(Tile):
                     if self.current_frame %4 == 0:self.anim_frame+=1
 
             else:
-                 if self.summoning:   
+                 if self.summoning: 
+                      
                     self.images = summon_anim[1]    
                     if self.anim_frame>=len(self.images): 
                         self.anim_frame = 0
                         self.summoning = False
+                        self.controlling_player = not self.controlling_player
                     image(self.display, self.images[self.anim_frame],
                             (round(self.rect.x - self.offset.x),
                                 round(self.rect.y - self.offset.y)))
                     if self.current_frame %4 == 0: self.anim_frame+=1
                     
-                 if self.vel.x == 0 and self.grounded:
+                 elif self.vel.x == 0 and self.grounded:
                     self.images = idle_anim[1]
                     if self.anim_frame >= len(self.images): self.anim_frame = 0
                     image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
@@ -105,19 +109,20 @@ class Player(Tile):
             self.creature.collide(tiles)
 
     def controls(self, moving_person, keys):
-        if keys[pygame.K_w] and moving_person.grounded and moving_person.can_jump:
-            moving_person.vel.y = -22
-            moving_person.grounded = False
-        if keys[pygame.K_a]:
-            
-            moving_person.set_dir(-moving_person.speed, moving_person.vel.y)
-            moving_person.direction = -1
-            
-        elif keys[pygame.K_d]:
-            moving_person.set_dir(moving_person.speed, moving_person.vel.y)
-            moving_person.direction = 1
-        else:
-            moving_person.set_dir(0, moving_person.vel.y)
+        if not self.summoning:
+            if keys[pygame.K_w] and moving_person.grounded and moving_person.can_jump:
+                moving_person.vel.y = -22
+                moving_person.grounded = False
+            if keys[pygame.K_a] :
+                
+                moving_person.set_dir(-moving_person.speed, moving_person.vel.y)
+                moving_person.direction = -1
+                
+            elif keys[pygame.K_d] :
+                moving_person.set_dir(moving_person.speed, moving_person.vel.y)
+                moving_person.direction = 1
+            else:
+                moving_person.set_dir(0, moving_person.vel.y)
 
     def set_dir(self, dir_x, dir_y):
         self.vel.update(dir_x, dir_y)
