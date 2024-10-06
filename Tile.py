@@ -15,7 +15,7 @@ class Tile:
         self.goal = -1
         self.id = 0
         self.images = images
-        self.frame = 0
+        self.anim_frame = 0
 
     # function for drawing tiles
     def draw(self, offset):
@@ -45,7 +45,7 @@ class Tile:
                                 collide = True
                 print(self.goal)
             if self.rect.y < self.goal:
-                self.rect.y += 4
+                self.rect.y += 12
                 if self.rect.colliderect(player.hit_box):
                     self.rect.y = player.hit_box.y-SCALE
                 if player.creature:

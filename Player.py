@@ -6,7 +6,7 @@ class Player(Tile):
 
     def __init__(self, display, grid_pos, color, images=None):
         super().__init__(display, grid_pos, color, collidable=True, images=None)
-        self.gravity = 3
+        self.gravity = 2.8
         self.speed = 10
         self.vel = pygame.math.Vector2(0, 0)
         self.grounded = True
@@ -16,18 +16,39 @@ class Player(Tile):
         self.creature = None
         self.can_jump = True
         self.offset = pygame.math.Vector2(0, 600)
-        self.images = idle_anim_R
+        self.images = idle_anim[0]
 
     def draw(self, offset):
         if self.images is not None:
-            print("-------------------")
+           
             if self.direction == 1:
-                self.images = idle_anim_R
-                image(self.display, self.images[self.frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+                if self.vel.x == 0 and self.grounded: 
+                    self.images = idle_anim[0]                  
+                    if self.anim_frame >= len(self.images): self.anim_frame = 0
+                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+                    self.anim_frame+=1
+                else: 
+                    self.images = walk_anim[0] 
+                    if self.anim_frame >= len(self.images): self.anim_frame = 0
+                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+                    self.anim_frame+=1
+
             else:
-                self.images = idle_anim_L
-                image(self.display, self.images[self.frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
-            self.frame=(self.frame + 1) % len(self.images)
+                if self.vel.x == 0 and self.grounded:
+                    self.images = idle_anim[1]
+                    if self.anim_frame >= len(self.images): self.anim_frame = 0
+                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+                    self.anim_frame+=1
+
+                else: 
+                    self.images = walk_anim[1]
+                    if self.anim_frame >= len(self.images): self.anim_frame = 0
+                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+                    self.anim_frame+=1
+
+                    
+                
+            
 
         else:
             print("Bbbbbbbbbbbbbbbbbbbbbbbbbb")
@@ -68,17 +89,18 @@ class Player(Tile):
 
     def controls(self, moving_person, keys):
         if keys[pygame.K_w] and moving_person.grounded and moving_person.can_jump:
-            moving_person.vel.y = -26
+            moving_person.vel.y = -22
             moving_person.grounded = False
         if keys[pygame.K_a]:
+            
             moving_person.set_dir(-moving_person.speed, moving_person.vel.y)
             moving_person.direction = -1
+            
         elif keys[pygame.K_d]:
             moving_person.set_dir(moving_person.speed, moving_person.vel.y)
             moving_person.direction = 1
         else:
             moving_person.set_dir(0, moving_person.vel.y)
-
 
     def set_dir(self, dir_x, dir_y):
         self.vel.update(dir_x, dir_y)
@@ -202,7 +224,7 @@ class CreatureA(Creature):
     def check_pickup(self, tile):
         return tile.movable and self.grab_box.colliderect(tile.rect) and not tile.drop
 
-    def pickup(self, tiles, movable_tiles, level):
+    def pickup(self, tiles, movable_tiles, level, player):
         movable = self.convert_to_dict(movable_tiles)
 
         self.grab_box = pygame.Rect(self.rect.x + (SCALE if self.direction == 1 else -SCALE / 2),
@@ -218,12 +240,20 @@ class CreatureA(Creature):
                     i += 1
 
                 loc = round(self.stack[-1].rect.y / SCALE), round(self.stack[-1].rect.x / SCALE)
-                if not(level[loc[0]-1][loc[1]] in [0, 2] and level[loc[0]-2][loc[1]] in [0, 2]):
+                if not (level[loc[0] - 1][loc[1]] in [0, 2] and level[loc[0] - 2][loc[1]] in [0, 2]):
                     self.stack = []
-                print(loc)
-                    # if not level[location[1] - i - 1][location[0]] in [0, 2]:
-                    #     self.stack = []
-                    #     break
+
+                fakerect = pygame.Rect(player.rect.x, player.rect.y + 4, player.rect.width, player.rect.height)
+                print(fakerect)
+                print(level[round(player.rect.y / SCALE)-2][round(player.rect.x / SCALE)])
+                if fakerect.colliderect(self.stack[-1].rect) and (
+                        level[round(player.rect.y / SCALE)-2][round(player.rect.x / SCALE)] in [0, 2]):
+                    player.rect.y -= SCALE * 2
+                elif not (level[round(player.rect.y / SCALE) - 2][round(player.rect.x / SCALE)] in [0, 2]):
+                    self.stack = []
+                # if not level[location[1] - i - 1][location[0]] in [0, 2]:
+                #     self.stack = []
+                #     break
 
                 print(self.stack)
                 for i, box in enumerate(self.stack):

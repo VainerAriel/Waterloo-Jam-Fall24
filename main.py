@@ -7,7 +7,6 @@ from levels import *
 def main():
     level = load_level(BASE_WORLD)
     tiles, movable_tiles, player = level
-
     # game loop
     while True:
         for event in pygame.event.get():
@@ -26,6 +25,7 @@ def main():
                             player.summon(summon_tile)
                     else:
                         player.creature.vel.x = 0
+                        
 
                     player.vel.x = 0
                     player.controlling_player = not player.controlling_player
@@ -33,7 +33,7 @@ def main():
                 if event.key == pygame.K_SPACE:
                     if not player.controlling_player and player.creature:
                         if len(player.creature.stack) == 0:
-                            player.creature.pickup(tiles, movable_tiles, BASE_WORLD)
+                            player.creature.pickup(tiles, movable_tiles, BASE_WORLD, player)
                         else:
                             for box in player.creature.stack:
                                 box.picked_up = False
@@ -81,6 +81,7 @@ def main():
             player.offset = camera_offset.copy()
         # maintians FPS of 30
         clock.tick(FPS)
+        
         # updates the screen display every frame
         pygame.display.update()
 
