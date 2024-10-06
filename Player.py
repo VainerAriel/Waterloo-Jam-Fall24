@@ -279,7 +279,7 @@ class Player(Tile):
                         self.vel.y = 0
 
                         move[1] = False
-                    if future_rect_x.colliderect(tile.rect):
+                    if future_rect_x.colliderect(tile.rect) and not(2650<self.rect.x<3300 and 1700<self.rect.y<2000):
                         while future_rect_x.colliderect(tile.rect):
                             future_rect_x.x -= 1 if self.rect.x - self.hit_box.width / 2 < tile.rect.x else -1
                         self.rect.x = future_rect_x.x + future_rect_x.width / 2
