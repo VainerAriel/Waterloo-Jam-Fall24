@@ -4,12 +4,13 @@ pygame.init()
 # size of screen in terms of tiles
 grid_w, grid_h = 24, 20
 DEFAULT_IMAGE_SIZE = (60, 60)
-DEFAULT_IMG_SIZE=(60,60)
-SCALE = 60  # size of tiles in pixels
-WIDTH, HEIGHT = 12 * SCALE, 10 * SCALE
+SCALE = 100  # size of tiles in pixels
+DEFAULT_IMG_SIZE = (SCALE, SCALE)
+DEFAULT_MONKEY_SIZE = (120, 120)
+WIDTH, HEIGHT = 8 * SCALE, 6 * SCALE
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-FPS = 32# sets framrate constant
+FPS = 32 # sets framrate constant
 
 # sets name of window
 pygame.display.set_caption("Waterloo Jam!!")
