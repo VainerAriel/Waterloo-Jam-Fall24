@@ -30,12 +30,13 @@ def main():
 
                 if event.key == pygame.K_SPACE:
                     if not player.controlling_player and player.creature:
-                        if player.creature.box_picked is None:
-                            player.creature.pickup(tiles)
+                        if len(player.creature.stack) == 0:
+                            player.creature.pickup(tiles, movable_tiles, BASE_WORLD)
                         else:
-                            player.creature.box_picked.picked_up = False
-                            player.creature.box_picked.drop = True
-                            player.creature.box_picked = None
+                            for box in player.creature.stack:
+                                box.picked_up = False
+                                box.drop = True
+
 
 
         keys = pygame.key.get_pressed()

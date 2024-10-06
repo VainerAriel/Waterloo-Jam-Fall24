@@ -13,24 +13,19 @@ class Tile:
         self.picked_up = False
         self.drop = False
         self.goal = -1
-        self.collide_with = None
+        self.id = 0
 
     # function for drawing tiles
     def draw(self, offset):
-        if not self.drop:
-            pygame.draw.rect(self.display, self.color,
-                             (round(self.rect.x - offset.x), round(self.rect.y - offset.y), self.rect.width,
-                              self.rect.height))
-        else:
-            pygame.draw.rect(self.display, (200, 200, 0),
-                             (round(self.rect.x - offset.x), round(self.rect.y - offset.y), self.rect.width,
-                              self.rect.height))
+        pygame.draw.rect(self.display, self.color,
+                         (round(self.rect.x - offset.x), round(self.rect.y - offset.y), self.rect.width,
+                          self.rect.height))
 
     def update_movable_tile(self, tiles, player):
         if self.picked_up:
             if player.creature:
                 self.rect.x = player.creature.rect.x
-                self.rect.y = player.creature.rect.y-SCALE
+                # self.rect.y = player.creature.rect.y-SCALE
         if self.drop:
             if self.goal == -1:
                 print("aa")
@@ -40,11 +35,11 @@ class Tile:
                 while not collide:
                     fake_tile.y += SCALE
                     for tile in tiles:
-                        if self != tile and tile.collidable:
+                        if self != tile and tile.collidable and not tile.movable:
                             if fake_tile.colliderect(tile):
                                 print(tile, self)
-                                pygame.draw.rect(screen, (0, 255, 255), tile.rect)
-                                self.goal = tile.rect.y - SCALE
+                                # pygame.draw.rect(screen, (0, 255, 255), tile.rect)
+                                self.goal = tile.rect.y - SCALE - SCALE * self.id
                                 collide = True
                 print(self.goal)
             if self.rect.y < self.goal:
@@ -54,24 +49,26 @@ class Tile:
                 if player.creature:
                     if self.rect.colliderect(player.creature.hit_box):
                         self.rect.y = player.creature.hit_box.y - SCALE
+                for tile in tiles:
+                    if self != tile and tile.collidable:
+                        if self.rect.colliderect(tile):
+                            self.rect.y = tile.rect.y - SCALE
                 print("add")
             else:
-                self.rect.y = self.goal
+                self.rect.y = self.goal - SCALE * self.id
 
             can_disappear = True
             if self.rect.colliderect(player.hit_box):
-                if self.collide_with is None:
-                    self.collide_with = 1
                 can_disappear = False
             if player.creature:
                 if self.rect.colliderect(player.creature.hit_box):
-                    if self.collide_with is None:
-                        self.collide_with = 2
                     can_disappear = False
 
             if can_disappear and self.rect.y == self.goal:
-                self.collide_with = None
                 self.drop = False
                 self.goal = -1
+                self.id = 0
+                player.stack = []
+
 
 
