@@ -2,7 +2,7 @@ import pygame
 
 pygame.init()
 # size of screen in terms of tiles
-grid_w, grid_h = 24, 20
+grid_w, grid_h = 36, 20
 DEFAULT_IMAGE_SIZE = (60, 60)
 SCALE = 100  # size of tiles in pixels
 DEFAULT_IMG_SIZE = (SCALE, SCALE)
