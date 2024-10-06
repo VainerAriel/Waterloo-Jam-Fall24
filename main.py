@@ -16,13 +16,13 @@ def main():
                 sys.exit()
                 # stops player movement if player presses summoning button (k)
             if event.type == pygame.KEYUP:
-                if event.key == pygame.K_l and player.grounded and player.creature:
+                if event.key == pygame.K_l and player.grounded and player.creature and not player.summoning:
                     player.summoning =True
-                    player.controlling_player = True
+                    player.controlling_player = False
                     player.creature.update_timer(99999999)
-                if event.key == pygame.K_k and player.grounded:
-                    if not player.creature:
-                        player.controlling_player = False
+                if event.key == pygame.K_k and player.grounded and not player.summoning:
+                    if  player.creature == None:
+                        player.controlling_player = True
                         player.summoning = True
                         summon_tile = player.check_tile_nearby(BASE_WORLD, movable_tiles)
                         if summon_tile is not None:

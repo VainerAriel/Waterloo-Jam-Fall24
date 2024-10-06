@@ -2,7 +2,7 @@ import pygame
 
 pygame.init()
 # size of screen in terms of tiles
-grid_w, grid_h = 24, 20
+grid_w, grid_h = 36, 20
 DEFAULT_IMAGE_SIZE = (60, 60)
 SCALE = 100  # size of tiles in pixels
 DEFAULT_IMG_SIZE = (SCALE, SCALE)
@@ -65,11 +65,17 @@ def fade(surface, mode, draw_func, *draw_par):
         pygame.time.delay(2)
         clock.tick()
 
-idle_anim = [[loadify(f"monkey-idle/monkey-idle_-{i+1}.png",DEFAULT_MONKEY_SIZE) for i in range(4)],
-             [loadify(f"monkey-idle/monkey-idle_-{i+1}.png",DEFAULT_MONKEY_SIZE, (True, False)) for i in range(4)]]
-walk_anim = [[loadify(f"monkey-walk/monkey-walk-{i+1}.png",DEFAULT_MONKEY_SIZE) for i in range(8)],
-             [loadify(f"monkey-walk/monkey-walk-{i+1}.png",DEFAULT_MONKEY_SIZE, (True, False)) for i in range(8)]]
-jump_anim = [[loadify(f"monkey-jump/monkey-jump-{i+1}.png",DEFAULT_MONKEY_SIZE) for i in range(7)],
-             [loadify(f"monkey-jump/monkey-jump-{i+1}.png",DEFAULT_MONKEY_SIZE, (True, False)) for i in range(7)]]
-summon_anim = [[loadify(f"monkey-summoning/Summon-{i+2}.png",DEFAULT_MONKEY_SIZE) for i in range(9)],
-             [loadify(f"monkey-summoning/Summon-{i+2}.png",DEFAULT_MONKEY_SIZE, (True, False)) for i in range(9)]]
+idle_anim = [[loadify(f"monkey-idle/monkey-idle_-{i+1}.png",DEFAULT_IMG_SIZE) for i in range(4)],
+             [loadify(f"monkey-idle/monkey-idle_-{i+1}.png",DEFAULT_IMG_SIZE, (True, False)) for i in range(4)]]
+walk_anim = [[loadify(f"monkey-walk/monkey-walk-{i+1}.png",DEFAULT_IMG_SIZE) for i in range(8)],
+             [loadify(f"monkey-walk/monkey-walk-{i+1}.png",DEFAULT_IMG_SIZE, (True, False)) for i in range(8)]]
+jump_anim = [[loadify(f"monkey-jump/monkey-jump-{i+1}.png",DEFAULT_IMG_SIZE) for i in range(7)],
+             [loadify(f"monkey-jump/monkey-jump-{i+1}.png",DEFAULT_IMG_SIZE, (True, False)) for i in range(7)]]
+summon_anim = [[loadify(f"monkey-summoning/Summon-{i+2}.png",DEFAULT_IMG_SIZE) for i in range(9)],
+             [loadify(f"monkey-summoning/Summon-{i+2}.png",DEFAULT_IMG_SIZE, (True, False)) for i in range(9)]]
+summon_part = [[loadify(f"summon-particles/Summon_Particles-{i+1}.png",DEFAULT_IMG_SIZE) for i in range(7)],
+             [loadify(f"summon-particles/Summon_Particles-{i+1}.png",DEFAULT_IMG_SIZE, (True, False)) for i in range(4)]]
+big_idle_anim =  [[loadify(f"bigguy-idle/bigguy-idle-{i+1}.png",(DEFAULT_IMG_SIZE[0],DEFAULT_IMG_SIZE[1]*2)) for i in range(4)],
+             [loadify(f"bigguy-idle/bigguy-idle-{i+1}.png",(DEFAULT_IMG_SIZE[0],DEFAULT_IMG_SIZE[1]*2), (True, False)) for i in range(4)]]
+big_walk_anim = [[loadify(f"bigguy-walk/bigguy-walk-{i+1}.png",(DEFAULT_IMG_SIZE[0],DEFAULT_IMG_SIZE[1]*2)) for i in range(4)],
+             [loadify(f"bigguy-walk/bigguy-walk-{i+1}.png",(DEFAULT_IMG_SIZE[0],DEFAULT_IMG_SIZE[1]*2), (True, False)) for i in range(4)]]
