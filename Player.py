@@ -9,7 +9,7 @@ class Player(Tile):
 
     def __init__(self, display, grid_pos, color, images=None):
         super().__init__(display, grid_pos, color, collidable=True, images=None)
-        self.gravity = 2.8
+        self.gravity = 2.6
         self.speed = 8
         self.vel = pygame.math.Vector2(0, 0)
         self.grounded = True
@@ -341,7 +341,7 @@ class Player(Tile):
 class Creature(Player):
     def __init__(self, display, grid_pos, color):
         super().__init__(display, grid_pos, color, images=None)
-        self.speed = 5
+        self.speed = 8
         self.disappear_timer = 0
         self.destroy_creature_timer = 15000
         self.destroy_creature = False
