@@ -1,5 +1,6 @@
 from Tile import Tile
 from settings import *
+from Animation import Animation
 
 
 class Player(Tile):
