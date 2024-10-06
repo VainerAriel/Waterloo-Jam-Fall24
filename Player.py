@@ -4,8 +4,8 @@ from settings import *
 
 class Player(Tile):
 
-    def __init__(self, display, grid_pos, color):
-        super().__init__(display, grid_pos, color, collidable=True)
+    def __init__(self, display, grid_pos, color, images=None):
+        super().__init__(display, grid_pos, color, collidable=True, images=None)
         self.gravity = 3
         self.speed = 10
         self.vel = pygame.math.Vector2(0, 0)
@@ -16,10 +16,23 @@ class Player(Tile):
         self.creature = None
         self.can_jump = True
         self.offset = pygame.math.Vector2(0, 600)
+        self.images = idle_anim_R
 
     def draw(self, offset):
-        pygame.draw.rect(self.display, self.color,
-                         (round(self.rect.x - offset.x), round(self.rect.y - offset.y), SCALE, SCALE))
+        if self.images is not None:
+            print("-------------------")
+            if self.direction == 1:
+                self.images = idle_anim_R
+                image(self.display, self.images[self.frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+            else:
+                self.images = idle_anim_L
+                image(self.display, self.images[self.frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+            self.frame=(self.frame + 1) % len(self.images)
+
+        else:
+            print("Bbbbbbbbbbbbbbbbbbbbbbbbbb")
+            pygame.draw.rect(self.display, self.color,
+                            (round(self.rect.x - offset.x), round(self.rect.y - offset.y), SCALE, SCALE))
         if self.creature:
             pygame.draw.rect(self.display, self.creature.color,
                              (round(self.creature.rect.x - offset.x), round(self.creature.rect.y - offset.y),
@@ -161,7 +174,7 @@ class Player(Tile):
 
 class Creature(Player):
     def __init__(self, display, grid_pos, color):
-        super().__init__(display, grid_pos, color)
+        super().__init__(display, grid_pos, color, images=None)
 
         self.disappear_timer = 0
         self.destroy_creature_timer = 5000

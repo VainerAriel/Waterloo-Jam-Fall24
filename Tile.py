@@ -3,7 +3,7 @@ from settings import *
 
 # class for defining tiles
 class Tile:
-    def __init__(self, display, grid_pos, color, collidable=False, movable=False):
+    def __init__(self, display, grid_pos, color, collidable=False, movable=False, images=None):
         self.display = display
         self.color = color
         self.rect = pygame.Rect(grid_pos[0] * SCALE, grid_pos[1] * SCALE, SCALE, SCALE)
@@ -14,6 +14,8 @@ class Tile:
         self.drop = False
         self.goal = -1
         self.id = 0
+        self.images = images
+        self.frame = 0
 
     # function for drawing tiles
     def draw(self, offset):

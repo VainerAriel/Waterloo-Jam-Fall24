@@ -1,7 +1,6 @@
 import sys
 
 import pygame.key
-
 from levels import *
 
 
