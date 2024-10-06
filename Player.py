@@ -16,7 +16,7 @@ class Player(Tile):
         self.direction = 1
         self.creature = None
         self.can_jump = True
-        self.offset = pygame.math.Vector2(0, 600)
+        self.offset = pygame.math.Vector2(0, grid_h*SCALE - HEIGHT)
         self.images = idle_anim[0]
         self.summoning = False
 
@@ -40,7 +40,7 @@ class Player(Tile):
         # else:
         #     self.walk_a.draw(self.display, (round(self.rect.x - offset.x), round(self.rect.y - offset.y)),
         #                      self.direction)
-        pygame.draw.rect(self.display, (255, 0, 0), (round(self.hit_box.x-offset.x), round(self.hit_box.y-offset.y), self.hit_box.width, self.hit_box.height))
+        # pygame.draw.rect(self.display, (255, 0, 0), (round(self.hit_box.x-offset.x), round(self.hit_box.y-offset.y), self.hit_box.width, self.hit_box.height))
 
         # if self.current_frame >= 31: self.current_frame = 0
         # if self.images is not None:
@@ -62,10 +62,47 @@ class Player(Tile):
         #                      (round(self.creature.rect.x - self.creature.rect.width / 2 - offset.x),
         #                       round(self.creature.rect.y - self.creature.rect.height / 2 - offset.y),
         #                       self.creature.rect.width, self.creature.rect.height))
+        if not self.creature == None and not self.creature.carrying_block:
+            if self.creature.current_frame >= 32: self.creature.current_frame = 0
+            if self.creature.direction == 1:
+
+                if self.creature.vel.x == 0:
+                    self.creature.images = big_idle_anim[0]
+                    if self.creature.anim_frame >= len(self.creature.images): self.creature.anim_frame = 0
+                    image(self.display, self.creature.images[self.creature.anim_frame],
+                          (round(self.creature.rect.x - offset.x),
+                           round(self.creature.rect.y - offset.y)), "center")
+                    if self.creature.current_frame % 8 == 0: self.creature.anim_frame += 1
+
+                else:
+                    self.creature.images = big_walk_anim[0]
+                    if self.creature.anim_frame >= len(self.creature.images): self.creature.anim_frame = 0
+                    image(self.display, self.creature.images[self.creature.anim_frame],
+                          (round(self.creature.rect.x - offset.x),
+                           round(self.creature.rect.y - offset.y)), "center")
+                    if self.creature.current_frame % 8 == 0: self.creature.anim_frame += 1
+
+            else:
+                if self.creature.vel.x == 0:
+                    self.creature.images = big_idle_anim[1]
+                    if self.creature.anim_frame >= len(self.creature.images): self.creature.anim_frame = 0
+                    image(self.display, self.creature.images[self.creature.anim_frame],
+                          (round(self.creature.rect.x - offset.x),
+                           round(self.creature.rect.y - offset.y)), "center")
+                    if self.creature.current_frame % 8 == 0: self.creature.anim_frame += 1
+                else:
+                    self.creature.images = big_walk_anim[1]
+                    if self.creature.anim_frame >= len(self.creature.images): self.creature.anim_frame = 0
+                    image(self.display, self.creature.images[self.creature.anim_frame],
+                          (round(self.creature.rect.x - offset.x),
+                           round(self.creature.rect.y - offset.y)), "center")
+                    if self.creature.current_frame % 8 == 0: self.creature.anim_frame += 1
+            self.creature.current_frame += 1
+        elif not self.creature == None and self.creature.carrying_block:
+            self.creature.current_frame += 1
 
         if self.current_frame >=31: self.current_frame = 0
         if self.images is not None:
-
             if self.direction == 1:
                 if self.summoning:
                     self.images = summon_anim[0]
@@ -80,7 +117,7 @@ class Player(Tile):
 
                         image(self.display, self.images[self.anim_frame-2],
                               (round(self.creature.rect.x - offset.x),
-                               round(self.creature.rect.y - offset.y + SCALE)), "center")
+                               round(self.creature.rect.y - offset.y +SCALE/2)), "center")
                     if self.current_frame %4 == 0: self.anim_frame +=1
 
                 elif self.vel.x == 0 and self.grounded:
@@ -122,45 +159,7 @@ class Player(Tile):
                     image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)), "center")
                     if self.current_frame %4 == 0:self.anim_frame+=1
 
-            if not self.creature == None and not self.creature.carrying_block:
-                 if self.creature.current_frame >= 32: self.creature.current_frame = 0
-                 if self.creature.direction == 1:
 
-
-                        if self.creature.vel.x == 0:
-                            self.creature.images = big_idle_anim[0]
-                            if self.creature.anim_frame >= len(self.creature.images): self.creature.anim_frame = 0
-                            image(self.display, self.creature.images[self.creature.anim_frame],
-                                (round(self.creature.rect.x - offset.x),
-                                round(self.creature.rect.y - offset.y)), "center")
-                            if self.creature.current_frame %8 == 0:self.creature.anim_frame+=1
-
-                        else:
-                            self.creature.images = big_walk_anim[0]
-                            if self.creature.anim_frame >= len(self.creature.images): self.creature.anim_frame = 0
-                            image(self.display, self.creature.images[self.creature.anim_frame],
-                                (round(self.creature.rect.x - offset.x),
-                                round(self.creature.rect.y - offset.y)), "center")
-                            if self.creature.current_frame %8 == 0:self.creature.anim_frame+=1
-
-                 else:
-                        if self.creature.vel.x == 0:
-                            self.creature.images = big_idle_anim[1]
-                            if self.creature.anim_frame >= len(self.creature.images): self.creature.anim_frame = 0
-                            image(self.display, self.creature.images[self.creature.anim_frame],
-                                    (round(self.creature.rect.x - offset.x),
-                                    round(self.creature.rect.y - offset.y)), "center")
-                            if self.creature.current_frame %8 == 0:self.creature.anim_frame+=1
-                        else:
-                            self.creature.images = big_walk_anim[1]
-                            if self.creature.anim_frame >= len(self.creature.images): self.creature.anim_frame = 0
-                            image(self.display, self.creature.images[self.creature.anim_frame],
-                                (round(self.creature.rect.x - offset.x),
-                                round(self.creature.rect.y - offset.y)), "center")
-                            if self.creature.current_frame %8 == 0:self.creature.anim_frame+=1
-                 self.creature.current_frame+=1
-            elif not self.creature == None and self.creature.carrying_block:
-                             self.creature.current_frame+=1
 
 
         # if False:
