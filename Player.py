@@ -111,20 +111,19 @@ class Player(Tile):
             self.creature.collide(tiles)
 
     def controls(self, moving_person, keys):
-        if not self.summoning:
-            if keys[pygame.K_w] and moving_person.grounded and moving_person.can_jump:
-                moving_person.vel.y = -22
-                moving_person.grounded = False
-                self.jump_a.start()
-            if keys[pygame.K_a]:
-                moving_person.set_dir(-moving_person.speed, moving_person.vel.y)
-                moving_person.direction = -1
+        if keys[pygame.K_w] and moving_person.grounded and moving_person.can_jump:
+            moving_person.vel.y = -22
+            moving_person.grounded = False
+            self.jump_a.start()
+        if keys[pygame.K_a]:
+            moving_person.set_dir(-moving_person.speed, moving_person.vel.y)
+            moving_person.direction = -1
 
-            elif keys[pygame.K_d]:
-                moving_person.set_dir(moving_person.speed, moving_person.vel.y)
-                moving_person.direction = 1
-            else:
-                moving_person.set_dir(0, moving_person.vel.y)
+        elif keys[pygame.K_d]:
+            moving_person.set_dir(moving_person.speed, moving_person.vel.y)
+            moving_person.direction = 1
+        else:
+            moving_person.set_dir(0, moving_person.vel.y)
 
 
     def set_dir(self, dir_x, dir_y):
