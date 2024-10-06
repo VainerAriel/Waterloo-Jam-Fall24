@@ -1,6 +1,6 @@
 from Tile import Tile
 from settings import *
-from Animation import Animation
+# from Animation import Animation
 
 
 class Player(Tile):
@@ -20,11 +20,11 @@ class Player(Tile):
         self.images = idle_anim[0]
         self.summoning = False
 
-        self.idle_a = Animation(8, idle_anim, 0)
-        self.walk_a = Animation(8, walk_anim, 0)
-        self.jump_a = Animation(8, jump_anim, 1)
-        self.summon_a = Animation(8, summon_anim, 1)
-        self.summon_p = Animation(8, summon_part, 1)
+        # self.idle_a = Animation(8, idle_anim, 0)
+        # self.walk_a = Animation(8, walk_anim, 0)
+        # self.jump_a = Animation(8, jump_anim, 1)
+        # self.summon_a = Animation(8, summon_anim, 1)
+        # self.summon_p = Animation(8, summon_part, 1)
 
     def draw(self, offset):
         # if self.summon_a.run_anim:
@@ -127,10 +127,10 @@ class Player(Tile):
                         tile.picked_up = False
                         tile.drop = True
 
-        self.idle_a.update()
-        self.walk_a.update()
-        self.jump_a.update(1 if self.vel.y > 0 else 2)
-        self.summon_a.update()
+        # self.idle_a.update()
+        # self.walk_a.update()
+        # self.jump_a.update(1 if self.vel.y > 0 else 2)
+        # self.summon_a.update()
 
     def update_pos(self, keys, tiles):
         self.hit_box.x = self.rect.x
@@ -153,7 +153,7 @@ class Player(Tile):
             if keys[pygame.K_w] and moving_person.grounded and moving_person.can_jump:
                 moving_person.vel.y = -22
                 moving_person.grounded = False
-                self.jump_a.start()
+                # self.jump_a.start()
             if keys[pygame.K_a]:
                 moving_person.set_dir(-moving_person.speed, moving_person.vel.y)
                 moving_person.direction = -1
@@ -200,7 +200,7 @@ class Player(Tile):
 
                         if self.rect.y <= tile.rect.y:
                             self.grounded = True
-                            self.jump_a.reset()
+                            # self.jump_a.reset()
                         self.rect.y = future_rect_y.y
                         self.vel.y = 0
 
