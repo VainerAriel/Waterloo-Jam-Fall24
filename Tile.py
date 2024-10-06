@@ -7,7 +7,6 @@ class Tile:
         self.display = display
         self.color = color
         self.rect = pygame.Rect(grid_pos[0] * SCALE, grid_pos[1] * SCALE, SCALE, SCALE)
-        self.hit_box = pygame.Rect(self.rect.x, self.rect.y, SCALE, SCALE)
         self.collidable = collidable
         self.movable = movable
         self.picked_up = False
@@ -27,11 +26,24 @@ class Tile:
     def update_movable_tile(self, tiles, player):
         if self.picked_up:
             if player.creature:
-                self.rect.x = player.creature.rect.x
+                future_rect = pygame.Rect(player.creature.rect.x-player.creature.rect.width/2, self.rect.y, self.rect.width, self.rect.height)
+                move = True
+                for tile in tiles:
+                    if future_rect.colliderect(tile.rect) and tile.collidable and self != tile:
+                        move = False
+                        for s in player.creature.stack:
+                            s.picked_up = False
+                            s.drop = True
+
+                if move:
+                    self.rect.x = player.creature.rect.x-player.creature.rect.width/2
                 # self.rect.y = player.creature.rect.y-SCALE
         if self.drop:
+            if abs(self.rect.x - (self.rect.x // SCALE * SCALE)) < 15:
+                self.rect.x = (self.rect.x // SCALE * SCALE)
+            if abs(self.rect.x - (self.rect.x // SCALE * SCALE + SCALE)) < 15:
+                self.rect.x = (self.rect.x // SCALE * SCALE) + SCALE
             if self.goal == -1:
-                print("aa")
                 collide = False
                 fake_tile = pygame.Rect(self.rect.x, self.rect.y, self.rect.width, self.rect.height)
 
@@ -40,11 +52,9 @@ class Tile:
                     for tile in tiles:
                         if self != tile and tile.collidable and not tile.movable:
                             if fake_tile.colliderect(tile):
-                                print(tile, self)
                                 # pygame.draw.rect(screen, (0, 255, 255), tile.rect)
                                 self.goal = tile.rect.y - SCALE - SCALE * self.id
                                 collide = True
-                print(self.goal)
             if self.rect.y < self.goal:
                 self.rect.y += 12
                 if self.rect.colliderect(player.hit_box):
@@ -56,7 +66,6 @@ class Tile:
                     if self != tile and tile.collidable:
                         if self.rect.colliderect(tile):
                             self.rect.y = tile.rect.y - SCALE
-                print("add")
             else:
                 self.rect.y = self.goal - SCALE * self.id
 

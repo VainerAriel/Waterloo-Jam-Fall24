@@ -20,21 +20,15 @@ class Player(Tile):
         self.images = idle_anim[0]
         self.summoning = False
 
+        self.hit_box = pygame.Rect(self.rect.x - SCALE*0.6 / 2, self.rect.y - SCALE / 2, SCALE*0.6, SCALE)
+
         # self.idle_a = Animation(8, idle_anim, 0)
         # self.walk_a = Animation(8, walk_anim, 0)
         # self.jump_a = Animation(8, jump_anim, 1)
         # self.summon_a = Animation(8, summon_anim, 1)
-        # self.summon_p = Animation(8, summon_part, 1)
 
     def draw(self, offset):
-        # if self.summon_a.run_anim:
-        #     self.jump_a.draw(self.display, (round(self.rect.x - offset.x), round(self.rect.y - offset.y)),
-        #                      self.direction)
-        #     if not self.creature == None:
-        #         self.summon_p.draw(self.display, (round(self.creature.rect.x - offset.x), round(self.creature.rect.y - offset.y)),
-        #                      self.direction)
-
-        # elif self.jump_a.run_anim:
+        # if self.jump_a.run_anim:
         #     self.jump_a.draw(self.display, (round(self.rect.x - offset.x), round(self.rect.y - offset.y)),
         #                      self.direction)
         # elif self.summon_a.run_anim:
@@ -45,11 +39,33 @@ class Player(Tile):
         #                      self.direction)
         # else:
         #     self.walk_a.draw(self.display, (round(self.rect.x - offset.x), round(self.rect.y - offset.y)),
-                            #  self.direction)
+        #                      self.direction)
+        pygame.draw.rect(self.display, (255, 0, 0), (round(self.hit_box.x-offset.x), round(self.hit_box.y-offset.y), self.hit_box.width, self.hit_box.height))
+
+        # if self.current_frame >= 31: self.current_frame = 0
+        # if self.images is not None:
+        #     if self.vel.x == 0 and self.grounded:
+        #         self.images = idle_anim[0 if self.direction == 1 else 1]
+        #     else:
+        #         self.images = walk_anim[0 if self.direction == 1 else 1]
+        #     if self.anim_frame >= len(self.images): self.anim_frame = 0
+        #     image(self.display, self.images[self.anim_frame],
+        #           (round(self.rect.x - offset.x), round(self.rect.y - offset.y)), "center")
+        #     if self.current_frame % 4 == 0: self.anim_frame += 1
+        #
+        #
+        # if False:
+        #     pygame.draw.rect(self.display, self.color,
+        #                      (round(self.rect.x - offset.x), round(self.rect.y - offset.y), SCALE, SCALE))
+        # if self.creature:
+        #     pygame.draw.rect(self.display, self.creature.color,
+        #                      (round(self.creature.rect.x - self.creature.rect.width / 2 - offset.x),
+        #                       round(self.creature.rect.y - self.creature.rect.height / 2 - offset.y),
+        #                       self.creature.rect.width, self.creature.rect.height))
 
         if self.current_frame >=31: self.current_frame = 0
         if self.images is not None:
-        
+
             if self.direction == 1:
                 if self.summoning:
                     self.images = summon_anim[0]
@@ -57,26 +73,27 @@ class Player(Tile):
                         self.anim_frame = 0
                         self.summoning = False
                         self.controlling_player = not self.controlling_player
-                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)),
+                          "center")
                     if not self.creature == None and self.anim_frame>=2:
                         self.images = summon_part[0]
-                        
-                        image(self.display, self.images[self.anim_frame-2], 
-                              (round(self.creature.rect.x - offset.x), 
-                               round(self.creature.rect.y - offset.y + SCALE)))
+
+                        image(self.display, self.images[self.anim_frame-2],
+                              (round(self.creature.rect.x - offset.x),
+                               round(self.creature.rect.y - offset.y + SCALE)), "center")
                     if self.current_frame %4 == 0: self.anim_frame +=1
 
                 elif self.vel.x == 0 and self.grounded:
                     self.images = idle_anim[0]
                     if self.anim_frame >= len(self.images): self.anim_frame = 0
-                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)), "center")
                     if self.current_frame %4 == 0: self.anim_frame+=1
                 else:
                     self.images = walk_anim[0]
                     if self.anim_frame >= len(self.images): self.anim_frame = 0
-                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)), "center")
                     if self.current_frame %4 == 0:self.anim_frame+=1
-        
+
             else:
                 if self.summoning:
                     self.images = summon_anim[1]
@@ -84,68 +101,68 @@ class Player(Tile):
                         self.anim_frame = 0
                         self.summoning = False
                         self.controlling_player = not self.controlling_player
-                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)), "center")
                     if not self.creature == None :
                         self.images = summon_part[1]
                         if self.anim_frame - 2 < len(self.images):
-                            image(self.display, self.images[max(self.anim_frame-2, 0)], 
-                              (round(self.creature.rect.x - offset.x), 
-                               round(self.creature.rect.y - offset.y + SCALE)))
+                            image(self.display, self.images[max(self.anim_frame-2, 0)],
+                              (round(self.creature.rect.x - offset.x),
+                               round(self.creature.rect.y - offset.y + SCALE)), "center")
                     if self.current_frame %4 == 0: self.anim_frame +=1
 
                 elif self.vel.x == 0 and self.grounded:
                     self.images = idle_anim[1]
                     if self.anim_frame >= len(self.images): self.anim_frame = 0
-                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)), "center")
                     if self.current_frame %4 == 0:self.anim_frame+=1
-        
+
                 else:
                     self.images = walk_anim[1]
                     if self.anim_frame >= len(self.images): self.anim_frame = 0
-                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)), "center")
                     if self.current_frame %4 == 0:self.anim_frame+=1
 
             if not self.creature == None and not self.creature.carrying_block:
                  if self.creature.current_frame >= 32: self.creature.current_frame = 0
                  if self.creature.direction == 1:
-                     
-                        
+
+
                         if self.creature.vel.x == 0:
                             self.creature.images = big_idle_anim[0]
                             if self.creature.anim_frame >= len(self.creature.images): self.creature.anim_frame = 0
-                            image(self.display, self.creature.images[self.creature.anim_frame], 
-                                (round(self.creature.rect.x - offset.x), 
-                                round(self.creature.rect.y - offset.y)))
+                            image(self.display, self.creature.images[self.creature.anim_frame],
+                                (round(self.creature.rect.x - offset.x),
+                                round(self.creature.rect.y - offset.y)), "center")
                             if self.creature.current_frame %8 == 0:self.creature.anim_frame+=1
-                        
-                        else: 
+
+                        else:
                             self.creature.images = big_walk_anim[0]
                             if self.creature.anim_frame >= len(self.creature.images): self.creature.anim_frame = 0
-                            image(self.display, self.creature.images[self.creature.anim_frame], 
-                                (round(self.creature.rect.x - offset.x), 
-                                round(self.creature.rect.y - offset.y)))
+                            image(self.display, self.creature.images[self.creature.anim_frame],
+                                (round(self.creature.rect.x - offset.x),
+                                round(self.creature.rect.y - offset.y)), "center")
                             if self.creature.current_frame %8 == 0:self.creature.anim_frame+=1
-                    
+
                  else:
                         if self.creature.vel.x == 0:
                             self.creature.images = big_idle_anim[1]
                             if self.creature.anim_frame >= len(self.creature.images): self.creature.anim_frame = 0
-                            image(self.display, self.creature.images[self.creature.anim_frame], 
-                                    (round(self.creature.rect.x - offset.x), 
-                                    round(self.creature.rect.y - offset.y)))
+                            image(self.display, self.creature.images[self.creature.anim_frame],
+                                    (round(self.creature.rect.x - offset.x),
+                                    round(self.creature.rect.y - offset.y)), "center")
                             if self.creature.current_frame %8 == 0:self.creature.anim_frame+=1
-                        else: 
+                        else:
                             self.creature.images = big_walk_anim[1]
                             if self.creature.anim_frame >= len(self.creature.images): self.creature.anim_frame = 0
-                            image(self.display, self.creature.images[self.creature.anim_frame], 
-                                (round(self.creature.rect.x - offset.x), 
-                                round(self.creature.rect.y - offset.y)))
+                            image(self.display, self.creature.images[self.creature.anim_frame],
+                                (round(self.creature.rect.x - offset.x),
+                                round(self.creature.rect.y - offset.y)), "center")
                             if self.creature.current_frame %8 == 0:self.creature.anim_frame+=1
                  self.creature.current_frame+=1
             elif not self.creature == None and self.creature.carrying_block:
                              self.creature.current_frame+=1
 
-                 
+
         # if False:
         #     print("Bbbbbbbbbbbbbbbbbbbbbbbbbb")
         #     pygame.draw.rect(self.display, self.color,
@@ -175,14 +192,13 @@ class Player(Tile):
         # self.summon_a.update()
 
     def update_pos(self, keys, tiles):
-        self.hit_box.x = self.rect.x
-        self.hit_box.y = self.rect.y
+        self.hit_box.x = self.rect.x - self.hit_box.width / 2
+        self.hit_box.y = self.rect.y - self.hit_box.height / 2
         self.vel.y += self.gravity
 
         if self.creature:
-            self.creature.hit_box.x = self.creature.rect.x
-            self.creature.hit_box.y = self.creature.rect.y
-            self.creature.vel.y += self.creature.gravity
+            self.creature.update_hit_box()
+
 
         self.controls(self.creature if not self.controlling_player and self.creature else self, keys)
 
@@ -213,8 +229,8 @@ class Player(Tile):
     def collide(self, tiles):
         if self.vel.magnitude() == 0:
             return
-        future_rect = pygame.Rect(self.hit_box.x + self.vel.x,
-                                  self.hit_box.y + self.vel.y,
+        future_rect = pygame.Rect(self.rect.x + self.vel.x - self.hit_box.width / 2,
+                                  self.rect.y + self.vel.y - self.hit_box.height / 2,
                                   self.hit_box.width,
                                   self.hit_box.height)
 
@@ -222,28 +238,30 @@ class Player(Tile):
         for tile in tiles:
             if future_rect.colliderect(tile.rect):
                 if tile.collidable:
-                    future_rect_x = pygame.Rect(self.hit_box.x + self.vel.x,
-                                                self.hit_box.y,
+                    future_rect_x = pygame.Rect(self.rect.x + self.vel.x - self.hit_box.width / 2,
+                                                self.rect.y - self.hit_box.height / 2-2,
                                                 self.hit_box.width,
                                                 self.hit_box.height)
-                    future_rect_y = pygame.Rect(self.hit_box.x,
-                                                self.hit_box.y + self.vel.y,
+                    future_rect_y = pygame.Rect(self.rect.x - self.hit_box.width / 2,
+                                                self.rect.y + self.vel.y - self.hit_box.height / 2,
                                                 self.hit_box.width,
                                                 self.hit_box.height)
 
                     if future_rect_x.colliderect(tile.rect):
+
                         while future_rect_x.colliderect(tile.rect):
-                            future_rect_x.x -= 1 if self.rect.x < tile.rect.x else -1
-                        self.rect.x = future_rect_x.x
+                            future_rect_x.x -= 1 if self.rect.x-self.hit_box.width/2 < tile.rect.x else -1
+                        self.rect.x = future_rect_x.x + future_rect_x.width/2
                         move[0] = False
                     if future_rect_y.colliderect(tile.rect):
+                        # print("yayCCC")
                         while future_rect_y.colliderect(tile.rect):
-                            future_rect_y.y -= 1 if self.rect.y < tile.rect.y else -1
+                            future_rect_y.y -= 1 if self.rect.y-self.hit_box.height/2 < tile.rect.y else -1
 
                         if self.rect.y <= tile.rect.y:
                             self.grounded = True
                             # self.jump_a.reset()
-                        self.rect.y = future_rect_y.y
+                        self.rect.y = future_rect_y.y + future_rect_y.height / 2
                         self.vel.y = 0
 
                         move[1] = False
@@ -256,7 +274,8 @@ class Player(Tile):
             self.grounded = False
 
     def update_grid_loc(self, level, movable_tiles):
-        self.grid_pos.update(round(self.rect.x / SCALE), round(self.rect.y / SCALE))
+        self.grid_pos.update(round((self.rect.x - self.hit_box.width / 2) / SCALE),
+                             round((self.rect.y - self.hit_box.height / 2) / SCALE))
         for y in range(len(level)):
             for x in range(len(level[y])):
                 if level[y][x] == 3:
@@ -320,10 +339,11 @@ class CreatureA(Creature):
     def __init__(self, display, grid_pos, color):
         super().__init__(display, grid_pos, color)
         self.can_jump = False
-        self.hit_box = pygame.Rect(self.rect.x, self.rect.y, SCALE, 2 * SCALE)
-        self.grab_box = pygame.Rect(self.rect.x + (SCALE if self.direction == 1 else -SCALE / 2),
-                                    self.rect.y + SCALE, SCALE / 2, SCALE)
-        self.rect = pygame.Rect(self.rect.x, self.rect.y, SCALE, 2 * SCALE)
+        self.hit_box = pygame.Rect(self.rect.x - SCALE*0.9 / 2, self.rect.y - 2 * SCALE / 2, SCALE*0.9, 2 * SCALE)
+        self.grab_box = pygame.Rect(self.rect.x + (SCALE / 2 if self.direction == 1 else -SCALE),
+                                    self.rect.y, SCALE / 2, SCALE)
+
+        self.rect = pygame.Rect(self.rect.x+SCALE/2, self.rect.y + 2*SCALE/2, SCALE, 2 * SCALE)
         self.can_pickup = False
 
         self.stack = []
@@ -334,8 +354,8 @@ class CreatureA(Creature):
     def pickup(self, tiles, movable_tiles, level, player):
         movable = self.convert_to_dict(movable_tiles)
 
-        self.grab_box = pygame.Rect(self.rect.x + (SCALE if self.direction == 1 else -SCALE / 2),
-                                    self.rect.y + SCALE, SCALE / 2, SCALE)
+        self.grab_box = pygame.Rect(self.rect.x + (SCALE / 2 if self.direction == 1 else -SCALE),
+                                    self.rect.y, SCALE / 2, SCALE)
 
         for tile in tiles:
             if self.check_pickup(tile):
@@ -350,26 +370,32 @@ class CreatureA(Creature):
                 if not (level[loc[0] - 1][loc[1]] in [0, 2] and level[loc[0] - 2][loc[1]] in [0, 2]):
                     self.stack = []
 
-                fakerect = pygame.Rect(player.rect.x, player.rect.y + 4, player.rect.width, player.rect.height)
-                print(fakerect)
-                print(level[round(player.rect.y / SCALE) - 2][round(player.rect.x / SCALE)])
+                fakerect = pygame.Rect(player.rect.x - player.hit_box.width / 2,
+                                       player.rect.y - player.hit_box.height / 2 + 4, player.hit_box.width,
+                                       player.hit_box.height)
                 if fakerect.colliderect(self.stack[-1].rect) and (
-                        level[round(player.rect.y / SCALE) - 2][round(player.rect.x / SCALE)] in [0, 2]):
+                        level[round((player.rect.y - player.hit_box.height / 2) / SCALE) - 2][
+                            round((player.rect.x - player.hit_box.width / 2) / SCALE)] in [0, 2]):
                     player.rect.y -= SCALE * 2
-                elif not (level[round(player.rect.y / SCALE) - 2][round(player.rect.x / SCALE)] in [0, 2]):
+                elif not (level[round((player.rect.y - player.hit_box.height / 2) / SCALE) - 2][
+                              round((player.rect.x - player.hit_box.width / 2) / SCALE)] in [0, 2]):
                     self.stack = []
                 # if not level[location[1] - i - 1][location[0]] in [0, 2]:
                 #     self.stack = []
                 #     break
 
-                print(self.stack)
                 for i, box in enumerate(self.stack):
                     box.rect.y -= 2 * SCALE
-                    self.rect.x = box.rect.x
+                    self.rect.x = box.rect.x+self.hit_box.width/2
                     box.picked_up = True
                     box.id = i
-                    print(box.id)
 
+    def update_hit_box(self):
+        self.hit_box.x = self.rect.x - self.hit_box.width / 2
+        self.hit_box.y = self.rect.y - self.hit_box.height / 2 - len(self.stack) * SCALE*0
+        # self.hit_box.height = SCALE * 2 + len(self.stack*SCALE)*0
+
+        self.vel.y += self.gravity
 
 class CreatureB(Creature):
     def __init__(self, display, grid_pos, color):
