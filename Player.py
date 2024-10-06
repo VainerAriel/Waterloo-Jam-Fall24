@@ -1,4 +1,3 @@
-from Animation import Animation
 from Tile import Tile
 from settings import *
 
@@ -18,6 +17,7 @@ class Player(Tile):
         self.can_jump = True
         self.offset = pygame.math.Vector2(0, 600)
         self.images = idle_anim[0]
+        self.summoning = False
 
         self.idle_a = Animation(8, idle_anim, 0)
         self.walk_a = Animation(8, walk_anim, 0)
@@ -68,11 +68,12 @@ class Player(Tile):
         if False:
             print("Bbbbbbbbbbbbbbbbbbbbbbbbbb")
             pygame.draw.rect(self.display, self.color,
-                             (round(self.rect.x - offset.x), round(self.rect.y - offset.y), SCALE, SCALE))
+                            (round(self.rect.x - offset.x), round(self.rect.y - offset.y), SCALE, SCALE))
         if self.creature:
             pygame.draw.rect(self.display, self.creature.color,
                              (round(self.creature.rect.x - offset.x), round(self.creature.rect.y - offset.y),
                               self.creature.rect.width, self.creature.rect.height))
+
         self.current_frame += 1
 
     def update(self, keys, tiles, time_passed=0):
@@ -109,19 +110,21 @@ class Player(Tile):
             self.creature.collide(tiles)
 
     def controls(self, moving_person, keys):
-        if keys[pygame.K_w] and moving_person.grounded and moving_person.can_jump:
-            moving_person.vel.y = -22
-            moving_person.grounded = False
-            self.jump_a.start()
+        if not self.summoning:
+            if keys[pygame.K_w] and moving_person.grounded and moving_person.can_jump:
+                moving_person.vel.y = -22
+                moving_person.grounded = False
+                self.jump_a.start()
+            if keys[pygame.K_a]:
+                moving_person.set_dir(-moving_person.speed, moving_person.vel.y)
+                moving_person.direction = -1
 
-        if keys[pygame.K_a]:
-            moving_person.set_dir(-moving_person.speed, moving_person.vel.y)
-            moving_person.direction = -1
-        elif keys[pygame.K_d]:
-            moving_person.set_dir(moving_person.speed, moving_person.vel.y)
-            moving_person.direction = 1
-        else:
-            moving_person.set_dir(0, moving_person.vel.y)
+            elif keys[pygame.K_d]:
+                moving_person.set_dir(moving_person.speed, moving_person.vel.y)
+                moving_person.direction = 1
+            else:
+                moving_person.set_dir(0, moving_person.vel.y)
+
 
     def set_dir(self, dir_x, dir_y):
         self.vel.update(dir_x, dir_y)
