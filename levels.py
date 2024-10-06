@@ -1,7 +1,6 @@
 from Player import Player
 from Tile import Tile
 from settings import *
-
 # 0 - air, 1 - wall, 2 - person 3 - movable box
 
 RANDOM = [
@@ -63,7 +62,7 @@ def load_level(level):
             if tile_type == 1:
                 tile = Tile(screen, (x, y), (100, 100, 100), collidable=True)
             elif tile_type == 2:
-                player = Player(screen, (x, y), (0, 255, 0))
+                player = Player(screen, (x, y), (0, 255, 0), images=idle_anim_R)
             elif tile_type == 3:
                 tiles.append(Tile(screen, (x, y), (255, 255, 255)))
                 tile = Tile(screen, (x, y), (0, 0, 255), collidable=True, movable=True)
