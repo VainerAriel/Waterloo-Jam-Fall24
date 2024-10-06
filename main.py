@@ -27,6 +27,7 @@ def main():
                         summon_tile = player.check_tile_nearby(BASE_WORLD, movable_tiles)
                         if summon_tile is not None:
                             player.summon(summon_tile)
+                            #add summon particle animation beside the summon animatoin
                     else:
                         player.creature.vel.x = 0
                         player.controlling_player = not player.controlling_player
