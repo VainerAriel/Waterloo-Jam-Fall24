@@ -105,7 +105,7 @@ class Player(Tile):
                     image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
                     if self.current_frame %4 == 0:self.anim_frame+=1
 
-            if not self.creature == None:
+            if not self.creature == None and not self.creature.carrying_block:
                  if self.creature.current_frame >= 32: self.creature.current_frame = 0
                  if self.creature.direction == 1:
                      
@@ -140,12 +140,15 @@ class Player(Tile):
                                 (round(self.creature.rect.x - offset.x), 
                                 round(self.creature.rect.y - offset.y)))
                             if self.creature.current_frame %8 == 0:self.creature.anim_frame+=1
+            elif self.creature.carrying_block:
+                 
                  self.creature.current_frame+=1
-        if False:
-            print("Bbbbbbbbbbbbbbbbbbbbbbbbbb")
-            pygame.draw.rect(self.display, self.color,
-                            (round(self.rect.x - offset.x), round(self.rect.y - offset.y), SCALE, SCALE))
-        # if self.creature:
+                 
+        # if False:
+        #     print("Bbbbbbbbbbbbbbbbbbbbbbbbbb")
+        #     pygame.draw.rect(self.display, self.color,
+        #                     (round(self.rect.x - offset.x), round(self.rect.y - offset.y), SCALE, SCALE))
+        # # if self.creature:
         #     pygame.draw.rect(self.display, self.creature.color,
         #                      (round(self.creature.rect.x - offset.x), round(self.creature.rect.y - offset.y),
         #                       self.creature.rect.width, self.creature.rect.height))
@@ -302,6 +305,7 @@ class Creature(Player):
         self.disappear_timer = 0
         self.destroy_creature_timer = 15000
         self.destroy_creature = False
+        self.carrying_block = False
 
     def update_timer(self, time_passed=0):
         self.destroy_creature_timer -= time_passed
