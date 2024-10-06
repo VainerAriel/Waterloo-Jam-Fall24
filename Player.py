@@ -66,7 +66,6 @@ class Player(Tile):
         else:
             moving_person.set_dir(0, moving_person.vel.y)
 
-
     def set_dir(self, dir_x, dir_y):
         self.vel.update(dir_x, dir_y)
 
@@ -189,7 +188,7 @@ class CreatureA(Creature):
     def check_pickup(self, tile):
         return tile.movable and self.grab_box.colliderect(tile.rect) and not tile.drop
 
-    def pickup(self, tiles, movable_tiles, level):
+    def pickup(self, tiles, movable_tiles, level, player):
         movable = self.convert_to_dict(movable_tiles)
 
         self.grab_box = pygame.Rect(self.rect.x + (SCALE if self.direction == 1 else -SCALE / 2),
@@ -205,12 +204,20 @@ class CreatureA(Creature):
                     i += 1
 
                 loc = round(self.stack[-1].rect.y / SCALE), round(self.stack[-1].rect.x / SCALE)
-                if not(level[loc[0]-1][loc[1]] in [0, 2] and level[loc[0]-2][loc[1]] in [0, 2]):
+                if not (level[loc[0] - 1][loc[1]] in [0, 2] and level[loc[0] - 2][loc[1]] in [0, 2]):
                     self.stack = []
-                print(loc)
-                    # if not level[location[1] - i - 1][location[0]] in [0, 2]:
-                    #     self.stack = []
-                    #     break
+
+                fakerect = pygame.Rect(player.rect.x, player.rect.y + 4, player.rect.width, player.rect.height)
+                print(fakerect)
+                print(level[round(player.rect.y / SCALE)-2][round(player.rect.x / SCALE)])
+                if fakerect.colliderect(self.stack[-1].rect) and (
+                        level[round(player.rect.y / SCALE)-2][round(player.rect.x / SCALE)] in [0, 2]):
+                    player.rect.y -= SCALE * 2
+                elif not (level[round(player.rect.y / SCALE) - 2][round(player.rect.x / SCALE)] in [0, 2]):
+                    self.stack = []
+                # if not level[location[1] - i - 1][location[0]] in [0, 2]:
+                #     self.stack = []
+                #     break
 
                 print(self.stack)
                 for i, box in enumerate(self.stack):
