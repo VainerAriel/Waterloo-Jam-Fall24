@@ -1,3 +1,4 @@
+from Animation import Animation
 from Tile import Tile
 from settings import *
 
@@ -18,44 +19,61 @@ class Player(Tile):
         self.offset = pygame.math.Vector2(0, 600)
         self.images = idle_anim[0]
 
+        self.idle_a = Animation(8, idle_anim, 0)
+        self.walk_a = Animation(8, walk_anim, 0)
+        self.jump_a = Animation(8, jump_anim, 1)
+        self.summon_a = Animation(8, summon_anim, 1)
+
     def draw(self, offset):
-        if self.current_frame >=31: self.current_frame = 0
-        if self.images is not None:
-        
-            if self.direction == 1:
-                if self.vel.x == 0 and self.grounded: 
-                    self.images = idle_anim[0]                  
-                    if self.anim_frame >= len(self.images): self.anim_frame = 0
-                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
-                    if self.current_frame %4 == 0: self.anim_frame+=1
-                else: 
-                    self.images = walk_anim[0] 
-                    if self.anim_frame >= len(self.images): self.anim_frame = 0
-                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
-                    if self.current_frame %4 == 0:self.anim_frame+=1
-
-            else:
-                if self.vel.x == 0 and self.grounded:
-                    self.images = idle_anim[1]
-                    if self.anim_frame >= len(self.images): self.anim_frame = 0
-                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
-                    if self.current_frame %4 == 0:self.anim_frame+=1
-
-                else: 
-                    self.images = walk_anim[1]
-                    if self.anim_frame >= len(self.images): self.anim_frame = 0
-                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
-                    if self.current_frame %4 == 0:self.anim_frame+=1
+        if self.jump_a.run_anim:
+            self.jump_a.draw(self.display, (round(self.rect.x - offset.x), round(self.rect.y - offset.y)),
+                             self.direction)
+        elif self.summon_a.run_anim:
+            self.summon_a.draw(self.display, (round(self.rect.x - offset.x), round(self.rect.y - offset.y)),
+                               self.direction)
+        elif self.vel.x == 0 and self.grounded:
+            self.idle_a.draw(self.display, (round(self.rect.x - offset.x), round(self.rect.y - offset.y)),
+                             self.direction)
         else:
+            self.walk_a.draw(self.display, (round(self.rect.x - offset.x), round(self.rect.y - offset.y)),
+                             self.direction)
+
+        # if self.current_frame >=31: self.current_frame = 0
+        # if self.images is not None:
+        #
+        #     if self.direction == 1:
+        #         if self.vel.x == 0 and self.grounded:
+        #             self.images = idle_anim[0]
+        #             if self.anim_frame >= len(self.images): self.anim_frame = 0
+        #             image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+        #             if self.current_frame %4 == 0: self.anim_frame+=1
+        #         else:
+        #             self.images = walk_anim[0]
+        #             if self.anim_frame >= len(self.images): self.anim_frame = 0
+        #             image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+        #             if self.current_frame %4 == 0:self.anim_frame+=1
+        #
+        #     else:
+        #         if self.vel.x == 0 and self.grounded:
+        #             self.images = idle_anim[1]
+        #             if self.anim_frame >= len(self.images): self.anim_frame = 0
+        #             image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+        #             if self.current_frame %4 == 0:self.anim_frame+=1
+        #
+        #         else:
+        #             self.images = walk_anim[1]
+        #             if self.anim_frame >= len(self.images): self.anim_frame = 0
+        #             image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+        #             if self.current_frame %4 == 0:self.anim_frame+=1
+        if False:
             print("Bbbbbbbbbbbbbbbbbbbbbbbbbb")
             pygame.draw.rect(self.display, self.color,
-                            (round(self.rect.x - offset.x), round(self.rect.y - offset.y), SCALE, SCALE))
+                             (round(self.rect.x - offset.x), round(self.rect.y - offset.y), SCALE, SCALE))
         if self.creature:
             pygame.draw.rect(self.display, self.creature.color,
-                            (round(self.creature.rect.x - offset.x), round(self.creature.rect.y - offset.y),
-                            self.creature.rect.width, self.creature.rect.height))
-        self.current_frame+=1
-
+                             (round(self.creature.rect.x - offset.x), round(self.creature.rect.y - offset.y),
+                              self.creature.rect.width, self.creature.rect.height))
+        self.current_frame += 1
 
     def update(self, keys, tiles, time_passed=0):
         self.update_pos(keys, tiles)
@@ -68,6 +86,11 @@ class Player(Tile):
                     if tile.picked_up:
                         tile.picked_up = False
                         tile.drop = True
+
+        self.idle_a.update()
+        self.walk_a.update()
+        self.jump_a.update(1 if self.vel.y > 0 else 2)
+        self.summon_a.update()
 
     def update_pos(self, keys, tiles):
         self.hit_box.x = self.rect.x
@@ -89,11 +112,11 @@ class Player(Tile):
         if keys[pygame.K_w] and moving_person.grounded and moving_person.can_jump:
             moving_person.vel.y = -22
             moving_person.grounded = False
+            self.jump_a.start()
+
         if keys[pygame.K_a]:
-            
             moving_person.set_dir(-moving_person.speed, moving_person.vel.y)
             moving_person.direction = -1
-            
         elif keys[pygame.K_d]:
             moving_person.set_dir(moving_person.speed, moving_person.vel.y)
             moving_person.direction = 1
@@ -135,6 +158,7 @@ class Player(Tile):
 
                         if self.rect.y <= tile.rect.y:
                             self.grounded = True
+                            self.jump_a.reset()
                         self.rect.y = future_rect_y.y
                         self.vel.y = 0
 
@@ -243,9 +267,9 @@ class CreatureA(Creature):
 
                 fakerect = pygame.Rect(player.rect.x, player.rect.y + 4, player.rect.width, player.rect.height)
                 print(fakerect)
-                print(level[round(player.rect.y / SCALE)-2][round(player.rect.x / SCALE)])
+                print(level[round(player.rect.y / SCALE) - 2][round(player.rect.x / SCALE)])
                 if fakerect.colliderect(self.stack[-1].rect) and (
-                        level[round(player.rect.y / SCALE)-2][round(player.rect.x / SCALE)] in [0, 2]):
+                        level[round(player.rect.y / SCALE) - 2][round(player.rect.x / SCALE)] in [0, 2]):
                     player.rect.y -= SCALE * 2
                 elif not (level[round(player.rect.y / SCALE) - 2][round(player.rect.x / SCALE)] in [0, 2]):
                     self.stack = []
