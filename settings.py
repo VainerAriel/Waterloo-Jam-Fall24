@@ -8,7 +8,7 @@ SCALE = 60  # size of tiles in pixels
 WIDTH, HEIGHT = 12 * SCALE, 10 * SCALE
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-FPS = 30  # sets framrate constant
+FPS = 30# sets framrate constant
 
 # sets name of window
 pygame.display.set_caption("Waterloo Jam!!")
