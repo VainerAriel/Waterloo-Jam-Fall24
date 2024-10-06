@@ -72,3 +72,5 @@ jump_anim = [[loadify(f"monkey-jump/monkey-jump-{i+1}.png",DEFAULT_IMG_SIZE) for
              [loadify(f"monkey-jump/monkey-jump-{i+1}.png",DEFAULT_IMG_SIZE, (True, False)) for i in range(7)]]
 summon_anim = [[loadify(f"monkey-summoning/Summon-{i+2}.png",DEFAULT_IMG_SIZE) for i in range(9)],
              [loadify(f"monkey-summoning/Summon-{i+2}.png",DEFAULT_IMG_SIZE, (True, False)) for i in range(9)]]
+summon_part = [[loadify(f"summon-particles/Summon_Particles-{i+1}.png",DEFAULT_IMG_SIZE) for i in range(7)],
+             [loadify(f"summon-particles/Summon_Particles-{i+1}.png",DEFAULT_IMG_SIZE, (True, False)) for i in range(7)]]
