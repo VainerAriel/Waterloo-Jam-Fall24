@@ -22,7 +22,7 @@ class Animation:
                 if self.type == 0:
                     self.frame = (self.frame + 1) % len(self.image_arr)
                 else:
-                    if self.frame < (len(self.image_arr) - 1)//2 if half == 1 else (len(self.image_arr) - 1):
+                    if self.frame < (len(self.image_arr) - 2)//2 if half == 1 else (len(self.image_arr) - 2):
                         self.frame += 1
 
 
