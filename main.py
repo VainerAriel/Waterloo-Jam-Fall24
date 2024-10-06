@@ -70,9 +70,9 @@ def main():
 
         image(screen, bg, (0-camera_offset.x, 0-camera_offset.y))
 
-        for tile in tiles:
-            if not tile.movable:
-                tile.draw(camera_offset)
+        # for tile in tiles:
+            # if not tile.movable:
+                # tile.draw(camera_offset)
 
         for tile in tiles:
             if tile.movable:
