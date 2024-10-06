@@ -21,7 +21,7 @@ def main():
                     player.controlling_player = False
                     player.creature.update_timer(99999999)
                 if event.key == pygame.K_k and player.grounded:
-                    if not player.creature:
+                    if  player.creature == None:
                         player.controlling_player = True
                         player.summoning = True
                         summon_tile = player.check_tile_nearby(BASE_WORLD, movable_tiles)
