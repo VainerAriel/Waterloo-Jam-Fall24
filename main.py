@@ -33,10 +33,11 @@ def main():
                     player.vel.x = 0
 
                 if event.key == pygame.K_SPACE:
-                    if not player.controlling_player and player.creature:
+                    if not player.controlling_player and player.creature and player.creature.carrying_block == False:
                         print(len(player.creature.stack))
                         if len(player.creature.stack) == 0:
                             player.creature.pickup(tiles, movable_tiles, BASE_WORLD, player)
+                            player.creature.carrying_block = True
                         else:
                             for box in player.creature.stack:
                                 box.picked_up = False
@@ -65,6 +66,8 @@ def main():
         elif 0 <= new_offset.y <= grid_h*SCALE - HEIGHT:
             camera_offset.y = new_offset.y
 
+        image(screen, bg, (0-camera_offset.x, 0-camera_offset.y))
+
         for tile in tiles:
             if not tile.movable:
                 tile.draw(camera_offset)
@@ -75,9 +78,9 @@ def main():
                 tile.draw(camera_offset)
 
         player.draw(camera_offset)
-        for i in range(grid_w):
-            for j in range(grid_h):
-                pygame.draw.rect(screen, (100, 100, 100), (i * SCALE - camera_offset.x, j * SCALE - camera_offset.y, SCALE, SCALE), 2)
+        # for i in range(grid_w):
+        #     for j in range(grid_h):
+        #         pygame.draw.rect(screen, (100, 100, 100), (i * SCALE - camera_offset.x, j * SCALE - camera_offset.y, SCALE, SCALE), 2)
 
         if not player.controlling_player and player.creature:
             player.creature.offset = camera_offset.copy()

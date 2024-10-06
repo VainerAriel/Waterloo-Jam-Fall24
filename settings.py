@@ -10,7 +10,7 @@ DEFAULT_MONKEY_SIZE = (120, 120)
 WIDTH, HEIGHT = 8 * SCALE, 6 * SCALE
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-FPS = 32 # sets framrate constant
+FPS = 32  # sets framrate constant
 
 # sets name of window
 pygame.display.set_caption("Waterloo Jam!!")
@@ -65,17 +65,44 @@ def fade(surface, mode, draw_func, *draw_par):
         pygame.time.delay(2)
         clock.tick()
 
-idle_anim = [[loadify(f"monkey-idle/monkey-idle_-{i+1}.png",DEFAULT_IMG_SIZE) for i in range(4)],
-             [loadify(f"monkey-idle/monkey-idle_-{i+1}.png",DEFAULT_IMG_SIZE, (True, False)) for i in range(4)]]
-walk_anim = [[loadify(f"monkey-walk/monkey-walk-{i+1}.png",DEFAULT_IMG_SIZE) for i in range(8)],
-             [loadify(f"monkey-walk/monkey-walk-{i+1}.png",DEFAULT_IMG_SIZE, (True, False)) for i in range(8)]]
-jump_anim = [[loadify(f"monkey-jump/monkey-jump-{i+1}.png",DEFAULT_IMG_SIZE) for i in range(7)],
-             [loadify(f"monkey-jump/monkey-jump-{i+1}.png",DEFAULT_IMG_SIZE, (True, False)) for i in range(7)]]
-summon_anim = [[loadify(f"monkey-summoning/Summon-{i+2}.png",DEFAULT_IMG_SIZE) for i in range(9)],
-             [loadify(f"monkey-summoning/Summon-{i+2}.png",DEFAULT_IMG_SIZE, (True, False)) for i in range(9)]]
-summon_part = [[loadify(f"summon-particles/Summon_Particles-{i+1}.png",DEFAULT_IMG_SIZE) for i in range(7)],
-             [loadify(f"summon-particles/Summon_Particles-{i+1}.png",DEFAULT_IMG_SIZE, (True, False)) for i in range(4)]]
-big_idle_anim =  [[loadify(f"bigguy-idle/bigguy-idle-{i+1}.png",(DEFAULT_IMG_SIZE[0],DEFAULT_IMG_SIZE[1]*2)) for i in range(4)],
-             [loadify(f"bigguy-idle/bigguy-idle-{i+1}.png",(DEFAULT_IMG_SIZE[0],DEFAULT_IMG_SIZE[1]*2), (True, False)) for i in range(4)]]
-big_walk_anim = [[loadify(f"bigguy-walk/bigguy-walk-{i+1}.png",(DEFAULT_IMG_SIZE[0],DEFAULT_IMG_SIZE[1]*2)) for i in range(4)],
-             [loadify(f"bigguy-walk/bigguy-walk-{i+1}.png",(DEFAULT_IMG_SIZE[0],DEFAULT_IMG_SIZE[1]*2), (True, False)) for i in range(4)]]
+
+idle_anim = [[loadify(f"monkey-idle/monkey-idle_-{i + 1}.png", DEFAULT_IMG_SIZE) for i in range(4)],
+             [loadify(f"monkey-idle/monkey-idle_-{i + 1}.png", DEFAULT_IMG_SIZE, (True, False)) for i in range(4)]]
+walk_anim = [[loadify(f"monkey-walk/monkey-walk-{i + 1}.png", DEFAULT_IMG_SIZE) for i in range(8)],
+             [loadify(f"monkey-walk/monkey-walk-{i + 1}.png", DEFAULT_IMG_SIZE, (True, False)) for i in range(8)]]
+jump_anim = [[loadify(f"monkey-jump/monkey-jump-{i + 1}.png", DEFAULT_IMG_SIZE) for i in range(7)],
+             [loadify(f"monkey-jump/monkey-jump-{i + 1}.png", DEFAULT_IMG_SIZE, (True, False)) for i in range(7)]]
+summon_anim = [[loadify(f"monkey-summoning/Summon-{i + 2}.png", DEFAULT_IMG_SIZE) for i in range(9)],
+               [loadify(f"monkey-summoning/Summon-{i + 2}.png", DEFAULT_IMG_SIZE, (True, False)) for i in range(9)]]
+summon_part = [[loadify(f"summon-particles/Summon_Particles-{i + 1}.png", DEFAULT_IMG_SIZE) for i in range(7)],
+               [loadify(f"summon-particles/Summon_Particles-{i + 1}.png", DEFAULT_IMG_SIZE, (True, False)) for i in
+                range(4)]]
+big_idle_anim = [
+    [loadify(f"bigguy-idle/bigguy-idle-{i + 1}.png", (DEFAULT_IMG_SIZE[0], DEFAULT_IMG_SIZE[1] * 2)) for i in range(4)],
+    [loadify(f"bigguy-idle/bigguy-idle-{i + 1}.png", (DEFAULT_IMG_SIZE[0], DEFAULT_IMG_SIZE[1] * 2), (True, False)) for
+     i in range(4)]]
+big_walk_anim = [
+    [loadify(f"bigguy-walk/bigguy-walk-{i + 1}.png", (DEFAULT_IMG_SIZE[0], DEFAULT_IMG_SIZE[1] * 2)) for i in range(4)],
+    [loadify(f"bigguy-walk/bigguy-walk-{i + 1}.png", (DEFAULT_IMG_SIZE[0], DEFAULT_IMG_SIZE[1] * 2), (True, False)) for
+     i in range(4)]]
+big_summon_anim = [
+    [loadify(f"bigguy-summon/bigguy-summon-{i + 1}.png", (DEFAULT_IMG_SIZE[0], DEFAULT_IMG_SIZE[1] * 2)) for i in
+     range(8)],
+    [loadify(f"bigguy-summon/bigguy-summon-{i + 1}.png", (DEFAULT_IMG_SIZE[0], DEFAULT_IMG_SIZE[1] * 2), (True, False))
+     for i in range(8)]]
+big_lift_box = [[[loadify(f"bigguy-lift-box/bigguy-walk-1-{i + 1}.png",
+                          (DEFAULT_IMG_SIZE[0] * 2, DEFAULT_IMG_SIZE[1] * 3)) for i in range(9)],
+                 [loadify(f"bigguy-lift-box/bigguy-walk-1-{i + 1}.png",
+                          (DEFAULT_IMG_SIZE[0] * 2, DEFAULT_IMG_SIZE[1] * 3), (True, False)) for i in range(9)]],
+                [[loadify(f"Lift2blocks/bigguy-walk-2-{i + 1}.png",
+                          (DEFAULT_IMG_SIZE[0] * 2, DEFAULT_IMG_SIZE[1] * 4)) for i in range(9)],
+                 [loadify(f"Lift2blocks/bigguy-walk-2-{i + 1}.png",
+                          (DEFAULT_IMG_SIZE[0] * 2, DEFAULT_IMG_SIZE[1] * 4), (True, False)) for i in range(9)]],
+                [[loadify(f"Lift3blocks/bigguy-walk-1-{i + 1}.png",
+                          (DEFAULT_IMG_SIZE[0] * 2, DEFAULT_IMG_SIZE[1] * 5)) for i in range(9)],
+                 [loadify(f"Lift3blocks/bigguy-walk-1-{i + 1}.png",
+                          (DEFAULT_IMG_SIZE[0] * 2, DEFAULT_IMG_SIZE[1] * 5), (True, False)) for i in range(9)]]
+                ]
+
+box = loadify(f"box.png", DEFAULT_MONKEY_SIZE)
+bg = loadify(f"bg.png", (DEFAULT_IMG_SIZE[0] * grid_w, DEFAULT_IMG_SIZE[1] * grid_h))

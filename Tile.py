@@ -16,34 +16,41 @@ class Tile:
         self.images = images
         self.anim_frame = 0
         self.current_frame = 0
+        self.show_tile = True
 
     # function for drawing tiles
     def draw(self, offset):
-        pygame.draw.rect(self.display, self.color,
-                         (round(self.rect.x - offset.x), round(self.rect.y - offset.y), self.rect.width,
+        if self.collidable and self.show_tile:
+            image(self.display, box, (round(self.rect.x - offset.x), round(self.rect.y - offset.y), self.rect.width,
                           self.rect.height))
+        # pygame.draw.rect(self.display, self.color,
+        #                  (round(self.rect.x - offset.x), round(self.rect.y - offset.y), self.rect.width,
+        #                   self.rect.height))
 
     def update_movable_tile(self, tiles, player):
         if self.picked_up:
             if player.creature:
-                future_rect = pygame.Rect(player.creature.rect.x-player.creature.rect.width/2, self.rect.y, self.rect.width, self.rect.height)
+                future_rect = pygame.Rect(player.creature.rect.x-player.creature.rect.width/2 + 5, self.rect.y, self.rect.width, self.rect.height)
+                print(future_rect)
                 move = True
                 for tile in tiles:
                     if future_rect.colliderect(tile.rect) and tile.collidable and self != tile:
                         move = False
+                        print(tile.rect)
                         for s in player.creature.stack:
                             s.picked_up = False
                             s.drop = True
 
                 if move:
-                    self.rect.x = player.creature.rect.x-player.creature.rect.width/2
+                    self.rect.x = player.creature.rect.x-player.creature.rect.width/2+5
                 # self.rect.y = player.creature.rect.y-SCALE
         if self.drop:
-            if abs(self.rect.x - (self.rect.x // SCALE * SCALE)) < 15:
-                self.rect.x = (self.rect.x // SCALE * SCALE)
-            if abs(self.rect.x - (self.rect.x // SCALE * SCALE + SCALE)) < 15:
-                self.rect.x = (self.rect.x // SCALE * SCALE) + SCALE
             if self.goal == -1:
+                if abs(self.rect.x - (self.rect.x // SCALE * SCALE)) < 15:
+                    self.rect.x = (self.rect.x // SCALE * SCALE)
+                if abs(self.rect.x - (self.rect.x // SCALE * SCALE + SCALE)) < 15:
+                    self.rect.x = (self.rect.x // SCALE * SCALE) + SCALE
+
                 collide = False
                 fake_tile = pygame.Rect(self.rect.x, self.rect.y, self.rect.width, self.rect.height)
 
