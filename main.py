@@ -34,7 +34,7 @@ def main():
                 if event.key == pygame.K_SPACE:
                     if not player.controlling_player and player.creature:
                         if len(player.creature.stack) == 0:
-                            player.creature.pickup(tiles, movable_tiles, BASE_WORLD)
+                            player.creature.pickup(tiles, movable_tiles, BASE_WORLD, player)
                         else:
                             for box in player.creature.stack:
                                 box.picked_up = False
