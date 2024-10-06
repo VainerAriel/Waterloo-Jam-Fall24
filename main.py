@@ -32,15 +32,16 @@ def main():
                         player.controlling_player = not player.controlling_player
                     player.vel.x = 0
 
-
                 if event.key == pygame.K_SPACE:
                     if not player.controlling_player and player.creature:
+                        print(len(player.creature.stack))
                         if len(player.creature.stack) == 0:
                             player.creature.pickup(tiles, movable_tiles, BASE_WORLD, player)
                         else:
                             for box in player.creature.stack:
                                 box.picked_up = False
                                 box.drop = True
+                            player.creature.stack = []
 
 
 
@@ -52,16 +53,16 @@ def main():
         if not player.controlling_player and player.creature:
             camera_offset = player.creature.offset.copy()
 
-        new_offset = pygame.math.Vector2(player.rect.x - 800 * WIDTH / 1920, player.rect.y - 600 * WIDTH / 1920)
+        new_offset = pygame.math.Vector2(player.rect.x - WIDTH/2, player.rect.y-HEIGHT/2)
         if not player.controlling_player and player.creature:
-            new_offset = pygame.math.Vector2(player.creature.rect.x - 800 * WIDTH / 1920,
-                                             player.creature.rect.y - 600 * WIDTH / 1920)
+            new_offset = pygame.math.Vector2(player.creature.rect.x - WIDTH/2,
+                                             player.creature.rect.y - HEIGHT/2)
 
-        if 0 <= new_offset.x <= SCALE * 12 and 0 <= new_offset.y <= SCALE * 10:
+        if 0 <= new_offset.x <= grid_w*SCALE - WIDTH and 0 <= new_offset.y <= grid_h*SCALE - HEIGHT:
             camera_offset = new_offset.copy()
-        elif 0 <= new_offset.x <= SCALE * 12:
+        elif 0 <= new_offset.x <= grid_w*SCALE - WIDTH:
             camera_offset.x = new_offset.x
-        elif 0 <= new_offset.y <= SCALE * 10:
+        elif 0 <= new_offset.y <= grid_h*SCALE - HEIGHT:
             camera_offset.y = new_offset.y
 
         for tile in tiles:
