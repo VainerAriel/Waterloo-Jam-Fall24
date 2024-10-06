@@ -7,7 +7,7 @@ class Player(Tile):
     def __init__(self, display, grid_pos, color, images=None):
         super().__init__(display, grid_pos, color, collidable=True, images=None)
         self.gravity = 2.8
-        self.speed = 10
+        self.speed = 8
         self.vel = pygame.math.Vector2(0, 0)
         self.grounded = True
         self.controlling_player = True
@@ -19,45 +19,43 @@ class Player(Tile):
         self.images = idle_anim[0]
 
     def draw(self, offset):
+        if self.current_frame >=31: self.current_frame = 0
         if self.images is not None:
-           
+        
             if self.direction == 1:
                 if self.vel.x == 0 and self.grounded: 
                     self.images = idle_anim[0]                  
                     if self.anim_frame >= len(self.images): self.anim_frame = 0
                     image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
-                    self.anim_frame+=1
+                    if self.current_frame %4 == 0: self.anim_frame+=1
                 else: 
                     self.images = walk_anim[0] 
                     if self.anim_frame >= len(self.images): self.anim_frame = 0
                     image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
-                    self.anim_frame+=1
+                    if self.current_frame %4 == 0:self.anim_frame+=1
 
             else:
                 if self.vel.x == 0 and self.grounded:
                     self.images = idle_anim[1]
                     if self.anim_frame >= len(self.images): self.anim_frame = 0
                     image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
-                    self.anim_frame+=1
+                    if self.current_frame %4 == 0:self.anim_frame+=1
 
                 else: 
                     self.images = walk_anim[1]
                     if self.anim_frame >= len(self.images): self.anim_frame = 0
                     image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
-                    self.anim_frame+=1
-
-                    
-                
-            
-
+                    if self.current_frame %4 == 0:self.anim_frame+=1
         else:
             print("Bbbbbbbbbbbbbbbbbbbbbbbbbb")
             pygame.draw.rect(self.display, self.color,
                             (round(self.rect.x - offset.x), round(self.rect.y - offset.y), SCALE, SCALE))
         if self.creature:
             pygame.draw.rect(self.display, self.creature.color,
-                             (round(self.creature.rect.x - offset.x), round(self.creature.rect.y - offset.y),
-                              self.creature.rect.width, self.creature.rect.height))
+                            (round(self.creature.rect.x - offset.x), round(self.creature.rect.y - offset.y),
+                            self.creature.rect.width, self.creature.rect.height))
+        self.current_frame+=1
+
 
     def update(self, keys, tiles, time_passed=0):
         self.update_pos(keys, tiles)

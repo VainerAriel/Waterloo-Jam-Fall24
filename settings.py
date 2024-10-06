@@ -3,13 +3,12 @@ import pygame
 pygame.init()
 # size of screen in terms of tiles
 grid_w, grid_h = 24, 20
-
+DEFAULT_IMAGE_SIZE = (60,60)
 SCALE = 60  # size of tiles in pixels
 WIDTH, HEIGHT = 12 * SCALE, 10 * SCALE
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-FPS = 30# sets framrate constant
-
+FPS = 32# sets framrate constant
 # sets name of window
 pygame.display.set_caption("Waterloo Jam!!")
 clock = pygame.time.Clock()
@@ -18,7 +17,7 @@ clock = pygame.time.Clock()
 # function for loading in images
 def loadify(filename, scaling, flip=(False, False)):
     img = pygame.image.load(filename).convert_alpha()
-    img = pygame.transform.scale(img, (img.get_width() * scaling, img.get_height() * scaling))
+    img = pygame.transform.scale(img, scaling)
     img = pygame.transform.flip(img, flip[0], flip[1])
     return img
 
@@ -63,11 +62,11 @@ def fade(surface, mode, draw_func, *draw_par):
         pygame.time.delay(2)
         clock.tick()
 
-idle_anim = [[loadify(f"monkey-idle/monkey-idle_-{i+1}.png",1) for i in range(4)],
-             [loadify(f"monkey-idle/monkey-idle_-{i+1}.png",1, (True, False)) for i in range(4)]]
-walk_anim = [[loadify(f"monkey-walk/monkey-walk-{i+1}.png",1) for i in range(8)],
-             [loadify(f"monkey-walk/monkey-walk-{i+1}.png",1, (True, False)) for i in range(8)]]
-jump_anim = [[loadify(f"monkey-jump/monkey-jump-{i+1}.png",1) for i in range(7)],
-             [loadify(f"monkey-jump/monkey-jump-{i+1}.png",1, (True, False)) for i in range(7)]]
-summon_anim = [[loadify(f"monkey-summoning/Summon-{i+2}.png",1) for i in range(9)],
-             [loadify(f"monkey-summoning/Summon-{i+2}.png",1, (True, False)) for i in range(9)]]
+idle_anim = [[loadify(f"monkey-idle/monkey-idle_-{i+1}.png",DEFAULT_IMAGE_SIZE) for i in range(4)],
+             [loadify(f"monkey-idle/monkey-idle_-{i+1}.png",DEFAULT_IMAGE_SIZE, (True, False)) for i in range(4)]]
+walk_anim = [[loadify(f"monkey-walk/monkey-walk-{i+1}.png",DEFAULT_IMAGE_SIZE) for i in range(8)],
+             [loadify(f"monkey-walk/monkey-walk-{i+1}.png",DEFAULT_IMAGE_SIZE, (True, False)) for i in range(8)]]
+jump_anim = [[loadify(f"monkey-jump/monkey-jump-{i+1}.png",DEFAULT_IMAGE_SIZE) for i in range(7)],
+             [loadify(f"monkey-jump/monkey-jump-{i+1}.png",DEFAULT_IMAGE_SIZE, (True, False)) for i in range(7)]]
+summon_anim = [[loadify(f"monkey-summoning/Summon-{i+2}.png",DEFAULT_IMAGE_SIZE) for i in range(9)],
+             [loadify(f"monkey-summoning/Summon-{i+2}.png",DEFAULT_IMAGE_SIZE, (True, False)) for i in range(9)]]
