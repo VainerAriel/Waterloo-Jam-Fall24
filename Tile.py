@@ -15,7 +15,8 @@ class Tile:
         self.goal = -1
         self.id = 0
         self.images = images
-        self.frame = 0
+        self.anim_frame = 0
+        self.current_frame = 1
 
     # function for drawing tiles
     def draw(self, offset):
