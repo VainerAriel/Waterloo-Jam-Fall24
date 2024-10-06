@@ -43,7 +43,7 @@ class Tile:
                                 collide = True
                 print(self.goal)
             if self.rect.y < self.goal:
-                self.rect.y += 4
+                self.rect.y += 12
                 if self.rect.colliderect(player.hit_box):
                     self.rect.y = player.hit_box.y-SCALE
                 if player.creature:
