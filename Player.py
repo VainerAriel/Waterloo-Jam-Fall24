@@ -58,7 +58,7 @@ class Player(Tile):
                         self.summoning = False
                         self.controlling_player = not self.controlling_player
                     image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
-                    if not self.creature == None:
+                    if not self.creature == None and self.anim_frame>=2:
                         self.images = summon_part[0]
                         
                         image(self.display, self.images[self.anim_frame-2], 
@@ -85,10 +85,10 @@ class Player(Tile):
                         self.summoning = False
                         self.controlling_player = not self.controlling_player
                     image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
-                    if not self.creature == None:
+                    if not self.creature == None :
                         self.images = summon_part[1]
-                        
-                        image(self.display, self.images[self.anim_frame-2], 
+                        if self.anim_frame - 2 < len(self.images):
+                            image(self.display, self.images[max(self.anim_frame-2, 0)], 
                               (round(self.creature.rect.x - offset.x), 
                                round(self.creature.rect.y - offset.y + SCALE)))
                     if self.current_frame %4 == 0: self.anim_frame +=1
@@ -104,6 +104,43 @@ class Player(Tile):
                     if self.anim_frame >= len(self.images): self.anim_frame = 0
                     image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
                     if self.current_frame %4 == 0:self.anim_frame+=1
+
+            if not self.creature == None:
+                 if self.creature.current_frame >= 32: self.creature.current_frame = 0
+                 if self.creature.direction == 1:
+                     
+                        
+                        if self.creature.vel.x == 0:
+                            self.creature.images = big_idle_anim[0]
+                            if self.creature.anim_frame >= len(self.creature.images): self.creature.anim_frame = 0
+                            image(self.display, self.creature.images[self.creature.anim_frame], 
+                                (round(self.creature.rect.x - offset.x), 
+                                round(self.creature.rect.y - offset.y)))
+                            if self.creature.current_frame %8 == 0:self.creature.anim_frame+=1
+                        
+                        else: 
+                            self.creature.images = big_walk_anim[0]
+                            if self.creature.anim_frame >= len(self.creature.images): self.creature.anim_frame = 0
+                            image(self.display, self.creature.images[self.creature.anim_frame], 
+                                (round(self.creature.rect.x - offset.x), 
+                                round(self.creature.rect.y - offset.y)))
+                            if self.creature.current_frame %8 == 0:self.creature.anim_frame+=1
+                 else:
+                        if self.creature.vel.x == 0:
+                            self.creature.images = big_idle_anim[1]
+                            if self.creature.anim_frame >= len(self.creature.images): self.creature.anim_frame = 0
+                            image(self.display, self.creature.images[self.creature.anim_frame], 
+                                    (round(self.creature.rect.x - offset.x), 
+                                    round(self.creature.rect.y - offset.y)))
+                            if self.creature.current_frame %8 == 0:self.creature.anim_frame+=1
+                        else: 
+                            self.creature.images = big_walk_anim[1]
+                            if self.creature.anim_frame >= len(self.creature.images): self.creature.anim_frame = 0
+                            image(self.display, self.creature.images[self.creature.anim_frame], 
+                                (round(self.creature.rect.x - offset.x), 
+                                round(self.creature.rect.y - offset.y)))
+                            if self.creature.current_frame %8 == 0:self.creature.anim_frame+=1
+                 self.creature.current_frame+=1
         if False:
             print("Bbbbbbbbbbbbbbbbbbbbbbbbbb")
             pygame.draw.rect(self.display, self.color,
@@ -261,7 +298,7 @@ class Player(Tile):
 class Creature(Player):
     def __init__(self, display, grid_pos, color):
         super().__init__(display, grid_pos, color, images=None)
-
+        self.speed = 5
         self.disappear_timer = 0
         self.destroy_creature_timer = 15000
         self.destroy_creature = False
