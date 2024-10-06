@@ -24,56 +24,94 @@ class Player(Tile):
         self.walk_a = Animation(8, walk_anim, 0)
         self.jump_a = Animation(8, jump_anim, 1)
         self.summon_a = Animation(8, summon_anim, 1)
+        self.summon_p = Animation(8, summon_part, 1)
 
     def draw(self, offset):
-        if self.jump_a.run_anim:
-            self.jump_a.draw(self.display, (round(self.rect.x - offset.x), round(self.rect.y - offset.y)),
-                             self.direction)
-        elif self.summon_a.run_anim:
-            self.summon_a.draw(self.display, (round(self.rect.x - offset.x), round(self.rect.y - offset.y)),
-                               self.direction)
-        elif self.vel.x == 0 and self.grounded:
-            self.idle_a.draw(self.display, (round(self.rect.x - offset.x), round(self.rect.y - offset.y)),
-                             self.direction)
-        else:
-            self.walk_a.draw(self.display, (round(self.rect.x - offset.x), round(self.rect.y - offset.y)),
-                             self.direction)
+        # if self.summon_a.run_anim:
+        #     self.jump_a.draw(self.display, (round(self.rect.x - offset.x), round(self.rect.y - offset.y)),
+        #                      self.direction)
+        #     if not self.creature == None:
+        #         self.summon_p.draw(self.display, (round(self.creature.rect.x - offset.x), round(self.creature.rect.y - offset.y)),
+        #                      self.direction)
 
-        # if self.current_frame >=31: self.current_frame = 0
-        # if self.images is not None:
-        #
-        #     if self.direction == 1:
-        #         if self.vel.x == 0 and self.grounded:
-        #             self.images = idle_anim[0]
-        #             if self.anim_frame >= len(self.images): self.anim_frame = 0
-        #             image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
-        #             if self.current_frame %4 == 0: self.anim_frame+=1
-        #         else:
-        #             self.images = walk_anim[0]
-        #             if self.anim_frame >= len(self.images): self.anim_frame = 0
-        #             image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
-        #             if self.current_frame %4 == 0:self.anim_frame+=1
-        #
-        #     else:
-        #         if self.vel.x == 0 and self.grounded:
-        #             self.images = idle_anim[1]
-        #             if self.anim_frame >= len(self.images): self.anim_frame = 0
-        #             image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
-        #             if self.current_frame %4 == 0:self.anim_frame+=1
-        #
-        #         else:
-        #             self.images = walk_anim[1]
-        #             if self.anim_frame >= len(self.images): self.anim_frame = 0
-        #             image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
-        #             if self.current_frame %4 == 0:self.anim_frame+=1
+        # elif self.jump_a.run_anim:
+        #     self.jump_a.draw(self.display, (round(self.rect.x - offset.x), round(self.rect.y - offset.y)),
+        #                      self.direction)
+        # elif self.summon_a.run_anim:
+        #     self.summon_a.draw(self.display, (round(self.rect.x - offset.x), round(self.rect.y - offset.y)),
+        #                        self.direction)
+        # elif self.vel.x == 0 and self.grounded:
+        #     self.idle_a.draw(self.display, (round(self.rect.x - offset.x), round(self.rect.y - offset.y)),
+        #                      self.direction)
+        # else:
+        #     self.walk_a.draw(self.display, (round(self.rect.x - offset.x), round(self.rect.y - offset.y)),
+                            #  self.direction)
+
+        if self.current_frame >=31: self.current_frame = 0
+        if self.images is not None:
+        
+            if self.direction == 1:
+                if self.summoning:
+                    self.images = summon_anim[0]
+                    if self.anim_frame >= len(self.images):
+                        self.anim_frame = 0
+                        self.summoning = False
+                        self.controlling_player = not self.controlling_player
+                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+                    if not self.creature == None:
+                        self.images = summon_part[0]
+                        
+                        image(self.display, self.images[self.anim_frame-2], 
+                              (round(self.creature.rect.x - offset.x), 
+                               round(self.creature.rect.y - offset.y + SCALE)))
+                    if self.current_frame %4 == 0: self.anim_frame +=1
+
+                elif self.vel.x == 0 and self.grounded:
+                    self.images = idle_anim[0]
+                    if self.anim_frame >= len(self.images): self.anim_frame = 0
+                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+                    if self.current_frame %4 == 0: self.anim_frame+=1
+                else:
+                    self.images = walk_anim[0]
+                    if self.anim_frame >= len(self.images): self.anim_frame = 0
+                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+                    if self.current_frame %4 == 0:self.anim_frame+=1
+        
+            else:
+                if self.summoning:
+                    self.images = summon_anim[1]
+                    if self.anim_frame >= len(self.images):
+                        self.anim_frame = 0
+                        self.summoning = False
+                        self.controlling_player = not self.controlling_player
+                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+                    if not self.creature == None:
+                        self.images = summon_part[1]
+                        
+                        image(self.display, self.images[self.anim_frame-2], 
+                              (round(self.creature.rect.x - offset.x), 
+                               round(self.creature.rect.y - offset.y + SCALE)))
+                    if self.current_frame %4 == 0: self.anim_frame +=1
+
+                elif self.vel.x == 0 and self.grounded:
+                    self.images = idle_anim[1]
+                    if self.anim_frame >= len(self.images): self.anim_frame = 0
+                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+                    if self.current_frame %4 == 0:self.anim_frame+=1
+        
+                else:
+                    self.images = walk_anim[1]
+                    if self.anim_frame >= len(self.images): self.anim_frame = 0
+                    image(self.display, self.images[self.anim_frame], (round(self.rect.x - offset.x), round(self.rect.y - offset.y)))
+                    if self.current_frame %4 == 0:self.anim_frame+=1
         if False:
             print("Bbbbbbbbbbbbbbbbbbbbbbbbbb")
             pygame.draw.rect(self.display, self.color,
                             (round(self.rect.x - offset.x), round(self.rect.y - offset.y), SCALE, SCALE))
-        if self.creature:
-            pygame.draw.rect(self.display, self.creature.color,
-                             (round(self.creature.rect.x - offset.x), round(self.creature.rect.y - offset.y),
-                              self.creature.rect.width, self.creature.rect.height))
+        # if self.creature:
+        #     pygame.draw.rect(self.display, self.creature.color,
+        #                      (round(self.creature.rect.x - offset.x), round(self.creature.rect.y - offset.y),
+        #                       self.creature.rect.width, self.creature.rect.height))
 
         self.current_frame += 1
 
@@ -111,19 +149,20 @@ class Player(Tile):
             self.creature.collide(tiles)
 
     def controls(self, moving_person, keys):
-        if keys[pygame.K_w] and moving_person.grounded and moving_person.can_jump:
-            moving_person.vel.y = -22
-            moving_person.grounded = False
-            self.jump_a.start()
-        if keys[pygame.K_a]:
-            moving_person.set_dir(-moving_person.speed, moving_person.vel.y)
-            moving_person.direction = -1
+        if not self.summoning:
+            if keys[pygame.K_w] and moving_person.grounded and moving_person.can_jump:
+                moving_person.vel.y = -22
+                moving_person.grounded = False
+                self.jump_a.start()
+            if keys[pygame.K_a]:
+                moving_person.set_dir(-moving_person.speed, moving_person.vel.y)
+                moving_person.direction = -1
 
-        elif keys[pygame.K_d]:
-            moving_person.set_dir(moving_person.speed, moving_person.vel.y)
-            moving_person.direction = 1
-        else:
-            moving_person.set_dir(0, moving_person.vel.y)
+            elif keys[pygame.K_d]:
+                moving_person.set_dir(moving_person.speed, moving_person.vel.y)
+                moving_person.direction = 1
+            else:
+                moving_person.set_dir(0, moving_person.vel.y)
 
 
     def set_dir(self, dir_x, dir_y):
@@ -224,7 +263,7 @@ class Creature(Player):
         super().__init__(display, grid_pos, color, images=None)
 
         self.disappear_timer = 0
-        self.destroy_creature_timer = 5000
+        self.destroy_creature_timer = 15000
         self.destroy_creature = False
 
     def update_timer(self, time_passed=0):
